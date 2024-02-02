@@ -7,7 +7,7 @@ ___
 ___
 
 ### Milestone 1
-####User Story 1
+#### User Story 1
 **(high)**
 AS A user,
 I WANT to add new goals to the current day’s goals
