@@ -1,7 +1,7 @@
 # Planning Poker Documentation
 ---
 | S#  | Name | Hand (hours) | False Assump Uncovered |
-| :--- |     |              |                        |
+| :--- |   ---  |        ----  |        ----          |
 | 1 | Add Goals to Current Day | 9, 5, 7, 6, 5 | Because this the first user story, and everything is new |
 | 2 | Unfinished Tasks Roll Over | 3, 3, 2, 4, 3 | Need to remember when a task if finished in order to update at 2AM |
 | 3 | Task Hiearcy of Unfinished and Finished | 3, 2, 2, 2, 2 | |
