@@ -12,11 +12,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.FragmentGoalListBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
+
 
 public class GoalListFragment extends Fragment {
     private MainViewModel activityModel;
@@ -51,8 +54,9 @@ public class GoalListFragment extends Fragment {
 //        this.adapter = new CardListAdapter(requireContext(), List.of(), activityModel::remove);
         activityModel.getGoalRepository().findAll().observe(goals -> {
             if (goals == null) return;
+            var newOrderedGoals = goals.stream().sorted(Comparator.comparing(Goal::getCreatedDate)).collect(Collectors.toList());
             adapter.clear();
-            adapter.addAll(new ArrayList<>(goals)); // remember the mutable copy here!
+            adapter.addAll(new ArrayList<>(newOrderedGoals)); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
     }
