@@ -10,8 +10,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.Date;
+
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.FragmentDialogCreateGoalBinding;
+import edu.ucsd.cse110.successorator.lib.domain.Goal;
 
 public class CreateGoalDialogFragment extends DialogFragment {
     private FragmentDialogCreateGoalBinding view;
@@ -51,23 +54,14 @@ public class CreateGoalDialogFragment extends DialogFragment {
     }
 
     private void onPositiveButtonClick(DialogInterface dialog, int which) {
-        //TODO:: Create a new goal
-        /*
         var front = view.cardFrontEditText.getText().toString();
         var back = view.cardBackEditText.getText().toString();
+        Date date = new Date();
 
         // sort order will be replaced
-        var card = new Flashcard(null, front, back, -1);
+        var goal = new Goal(front, back, 0, 0, date);
 
-        if (view.appendRadioBtn.isChecked()) {
-            activityModel.append(card);
-        } else if (view.prependRadioBtn.isChecked()) {
-            activityModel.prepend(card);
-        } else {
-            throw new IllegalStateException("No radio button is checked.");
-        }
-
-         */
+        activityModel.getGoalRepository().save(goal);
 
         dialog.dismiss();
     }

@@ -23,6 +23,7 @@ public class InMemoryDataSource {
     private final Subject<List<Goal>> allGoalsSubject
             = new SimpleSubject<>();
 
+    private int nextid = 0;
 
     public InMemoryDataSource() {
     }
@@ -67,7 +68,9 @@ public class InMemoryDataSource {
 
         allGoalsSubject.setValue(getGoals());
     }
-    public void putGoal(Goal goal) {
+    public void putGoal(Goal old_goal) {
+        Goal goal = old_goal.withId(nextid);
+        nextid++;
         Goals.put(goal.getId(), goal);
         if (GoalSubjects.containsKey(goal.getId())) {
             GoalSubjects.get(goal.getId()).setValue(goal);
@@ -90,12 +93,12 @@ public class InMemoryDataSource {
     }
 
     public final static List<Goal> DEFAULT_GOALS = List.of(
-            new Goal("SRP", "Single Responsibility Principle", 10, 1),
-            new Goal("OCP", "Open-Closed Principle", 10, 2),
-            new Goal("LSP", "Liskov Substitution Principle", 10, 3),
-            new Goal("ISP", "Interface Segregation Principle", 10, 4),
-            new Goal("DIP", "Dependency Inversion Principle", 10, 5),
-            new Goal("LKP", "Least Knowledge Principle (Law of Demeter)", 10, 6)
+            new Goal("SRP", "Single Responsibility Principle", 10, 1, new Date()),
+            new Goal("OCP", "Open-Closed Principle", 10, 2, new Date()),
+            new Goal("LSP", "Liskov Substitution Principle", 10, 3, new Date()),
+            new Goal("ISP", "Interface Segregation Principle", 10, 4, new Date()),
+            new Goal("DIP", "Dependency Inversion Principle", 10, 5, new Date()),
+            new Goal("LKP", "Least Knowledge Principle (Law of Demeter)", 10, 6, new Date())
     );
 
     public static InMemoryDataSource fromDefault() {
@@ -105,4 +108,5 @@ public class InMemoryDataSource {
         }
         return data;
     }
+
 }
