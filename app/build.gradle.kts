@@ -38,6 +38,8 @@ android {
 
 dependencies {
     implementation(project(":lib"))
+    implementation(project(":lib"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     project(":lib")
 
     implementation("androidx.appcompat:appcompat:1.6.1")
