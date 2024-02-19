@@ -55,8 +55,24 @@ public class GoalListAdapter extends ArrayAdapter<Goal> {
         binding.goalTitle.setText(goal.getName());
         binding.goalDescription.setText(goal.getDescription());
 
+        binding.goalCheckBox.setOnClickListener(v -> {
+            if (binding.goalCheckBox.isChecked()) {
+                activityModel.getDay().getGoalRepository().setCompleted(goal.getId());
+            } else {
+                activityModel.getDay().getGoalRepository().setNonCompleted(goal.getId());
+            }
+        });
+
+
         binding.getRoot().setOnClickListener(v -> {
             Log.i("GoalListAdapter", "Goal item is clicked");
+            if (binding.goalCheckBox.isChecked()) {
+                binding.goalCheckBox.setChecked(false);
+                activityModel.getDay().getGoalRepository().setNonCompleted(goal.getId());
+            } else {
+                binding.goalCheckBox.setChecked(true);
+                activityModel.getDay().getGoalRepository().setCompleted(goal.getId());
+            }
         });
 
         return binding.getRoot();
