@@ -37,6 +37,14 @@ public class Day {
 
                 oldDate = newDate;
 
+                var goals = goalRepository.findAll().getValue();
+                assert goals != null;
+                for (var goal : goals) {
+                    if (goal.isCompleted()) {
+                        goalRepository.remove(goal.getId());
+                    }
+                }
+
             }
         });
     }
