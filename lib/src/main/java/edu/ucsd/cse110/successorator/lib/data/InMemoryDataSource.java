@@ -7,7 +7,7 @@ import java.util.Map;
 
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
-import edu.ucsd.cse110.successorator.lib.util.Subject;
+import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
 
 /**
  * Class used as a sort of "database" of decks and Goals that exist. This
@@ -18,9 +18,9 @@ import edu.ucsd.cse110.successorator.lib.util.Subject;
 public class InMemoryDataSource {
     private final Map<Integer, Goal> Goals
             = new HashMap<>();
-    private final Map<Integer, Subject<Goal>> GoalSubjects
+    private final Map<Integer, MutableSubject<Goal>> GoalSubjects
             = new HashMap<>();
-    private final Subject<List<Goal>> allGoalsSubject
+    private final MutableSubject<List<Goal>> allGoalsMutableSubject
             = new SimpleSubject<>();
 
     private int nextid = 0;
@@ -36,7 +36,7 @@ public class InMemoryDataSource {
         return Goals.get(id);
     }
 
-    public Subject<Goal> getGoalSubject(int id) {
+    public MutableSubject<Goal> getGoalSubject(int id) {
         if (!GoalSubjects.containsKey(id)) {
             var subject = new SimpleSubject<Goal>();
             subject.setValue(getGoal(id));
@@ -46,8 +46,8 @@ public class InMemoryDataSource {
         return GoalSubjects.get(id);
     }
 
-    public Subject<List<Goal>> getAllGoalsSubject() {
-        return allGoalsSubject;
+    public MutableSubject<List<Goal>> getAllGoalsSubject() {
+        return allGoalsMutableSubject;
     }
 
     // completeGoal
@@ -58,7 +58,7 @@ public class InMemoryDataSource {
             GoalSubjects.get(modifiedGoal.getId()).setValue(modifiedGoal);
         }
 
-        allGoalsSubject.setValue(getGoals());
+        allGoalsMutableSubject.setValue(getGoals());
     }
 
     // completeGoal
@@ -69,7 +69,7 @@ public class InMemoryDataSource {
             GoalSubjects.get(modifiedGoal.getId()).setValue(modifiedGoal);
         }
 
-        allGoalsSubject.setValue(getGoals());
+        allGoalsMutableSubject.setValue(getGoals());
     }
 
     public void removeGoal(int id) {
@@ -77,7 +77,7 @@ public class InMemoryDataSource {
         // removing an non-existent object is fine
         GoalSubjects.remove(id);
 
-        allGoalsSubject.setValue(getGoals());
+        allGoalsMutableSubject.setValue(getGoals());
     }
     public void putGoal(Goal old_goal) {
         Goal goal = old_goal.withId(nextid);
@@ -87,7 +87,7 @@ public class InMemoryDataSource {
             GoalSubjects.get(goal.getId()).setValue(goal);
         }
 
-        allGoalsSubject.setValue(getGoals());
+        allGoalsMutableSubject.setValue(getGoals());
     }
 
     public void putGoals(List<Goal> goals) {

@@ -1,10 +1,9 @@
 package edu.ucsd.cse110.successorator.lib.domain;
 
-import java.util.Date;
 import java.util.List;
 
 import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
-import edu.ucsd.cse110.successorator.lib.util.Subject;
+import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
 
 public class SimpleGoalRepository implements GoalRepository{
     private final InMemoryDataSource dataSource;
@@ -14,12 +13,12 @@ public class SimpleGoalRepository implements GoalRepository{
     }
 
     @Override
-    public Subject<Goal> find(int id) {
+    public MutableSubject<Goal> find(int id) {
         return dataSource.getGoalSubject(id);
     }
 
     @Override
-    public Subject<List<Goal>> findAll() {
+    public MutableSubject<List<Goal>> findAll() {
         return dataSource.getAllGoalsSubject();
     }
 

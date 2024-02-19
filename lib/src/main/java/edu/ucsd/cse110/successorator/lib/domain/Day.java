@@ -2,18 +2,15 @@ package edu.ucsd.cse110.successorator.lib.domain;
 
 import androidx.annotation.NonNull;
 
-import java.util.Date;
-import java.util.Objects;
-
-import edu.ucsd.cse110.successorator.lib.util.Subject;
+import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
 
 public class Day {
-    private final @NonNull Subject<SuccessDate> successDate;
+    private final @NonNull MutableSubject<SuccessDate> successDate;
     private @NonNull SuccessDate oldDate;
     private final @NonNull GoalRepository goalRepository;
 
     @NonNull
-    public Subject<SuccessDate> getSuccessDate() {
+    public MutableSubject<SuccessDate> getSuccessDate() {
         return successDate;
     }
 
@@ -22,7 +19,7 @@ public class Day {
         return goalRepository;
     }
 
-    public Day(@NonNull Subject<SuccessDate> successDate, @NonNull GoalRepository goalRepository) {
+    public Day(@NonNull MutableSubject<SuccessDate> successDate, @NonNull GoalRepository goalRepository) {
         this.successDate = successDate;
         assert successDate.getValue() != null;
         this.oldDate = successDate.getValue();
