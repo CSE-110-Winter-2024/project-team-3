@@ -24,4 +24,5 @@ public class LiveDataMutableSubjectAdapter<T> implements Subject<T> {
     public void removeObserver (Observer < T > observer) {
         adaptee.removeObserver(observer::onChanged);
     }
+
 }
