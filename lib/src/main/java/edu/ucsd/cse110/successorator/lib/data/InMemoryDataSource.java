@@ -93,7 +93,9 @@ public class InMemoryDataSource {
     }
 
     public final static List<Goal> DEFAULT_GOALS = List.of(
-            new Goal("SRP", "Single Responsibility Principle", 10, 1, new Date())
+            new Goal("Go Shower", "Being clean", 10, 1, new Date()),
+            new Goal("Do Groceries", "buy broccilli", 10, 2, new Date()),
+            new Goal("Run", "exercise to be healthy", 10, 3, new Date())
     );
 
     public static InMemoryDataSource fromDefault() {
