@@ -8,3 +8,4 @@
 | 4 | Speak Phrase into Goal | 0, 1, 1, 1, 1 | We still need to test and confirm. |
 | 5 | Mark Goals as Complete | 1, 4, 2, 1, 2 | XML UI need some change? |
 
+![Image of team playing planning poker](https://github.com/CSE-110-Winter-2024/project-team-3/blob/addplanningpokerimage/docs/planningpoker.jpg?raw=true)
