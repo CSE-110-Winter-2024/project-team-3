@@ -19,5 +19,7 @@ public interface GoalRepository {
 
     void append(Goal goal);
 
-    public void complete(int id, Date completeDate);
+
+    void setCompleted(int id);
+    void setNonCompleted(int id);
 }

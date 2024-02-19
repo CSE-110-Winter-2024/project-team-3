@@ -51,8 +51,19 @@ public class InMemoryDataSource {
     }
 
     // completeGoal
-    public void completeGoal(int id, Date date) {
-        Goal modifiedGoal = getGoal(id).withComplete(true, date);
+    public void completeGoal(int id) {
+        Goal modifiedGoal = getGoal(id).withComplete(true);
+        Goals.put(modifiedGoal.getId(), modifiedGoal);
+        if (GoalSubjects.containsKey(modifiedGoal.getId())) {
+            GoalSubjects.get(modifiedGoal.getId()).setValue(modifiedGoal);
+        }
+
+        allGoalsSubject.setValue(getGoals());
+    }
+
+    // completeGoal
+    public void unCompleteGoal(int id) {
+        Goal modifiedGoal = getGoal(id).withComplete(false);
         Goals.put(modifiedGoal.getId(), modifiedGoal);
         if (GoalSubjects.containsKey(modifiedGoal.getId())) {
             GoalSubjects.get(modifiedGoal.getId()).setValue(modifiedGoal);

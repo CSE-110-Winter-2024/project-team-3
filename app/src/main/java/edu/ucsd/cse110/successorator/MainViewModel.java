@@ -6,13 +6,14 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
+import edu.ucsd.cse110.successorator.lib.domain.Day;
 import edu.ucsd.cse110.successorator.lib.domain.GoalRepository;
 
 public class MainViewModel extends ViewModel {
-    private final @NonNull GoalRepository goalRepository;
+    private final @NonNull Day day;
 
-    public MainViewModel(GoalRepository goalRepository) {
-        this.goalRepository = goalRepository;
+    public MainViewModel(Day day) {
+        this.day = day;
     }
 
     public static final ViewModelInitializer<MainViewModel> initializer =
@@ -21,10 +22,11 @@ public class MainViewModel extends ViewModel {
                     creationExtras -> {
                         var app = (SuccessoratorApplication) creationExtras.get(APPLICATION_KEY);
                         assert app != null;
-                        return new MainViewModel(app.getGoalRepository());
+                        return new MainViewModel(app.getDay());
                     });
 
-    public GoalRepository getGoalRepository() {
-        return goalRepository;
+    @NonNull
+    public Day getDay() {
+        return day;
     }
 }

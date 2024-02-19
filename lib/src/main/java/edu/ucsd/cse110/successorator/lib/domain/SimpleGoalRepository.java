@@ -47,8 +47,14 @@ public class SimpleGoalRepository implements GoalRepository{
     }
 
     @Override
-    public void complete(int id, Date completeDate) {
-        dataSource.completeGoal(id, completeDate);
+    public void setCompleted(int id) {
+        dataSource.completeGoal(id);
     }
+
+    @Override
+    public void setNonCompleted(int id) {
+        dataSource.unCompleteGoal(id);
+    }
+
 
 }

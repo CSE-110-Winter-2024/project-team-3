@@ -71,8 +71,8 @@ public class Goal {
         return new Goal(name, description, newPriority, id, completed, completedDate, createdDate);
     }
     @NonNull
-    public Goal withComplete(boolean newComplete, Date newCompleteDate) {
-        return new Goal(name, description, priority, id, newComplete, newCompleteDate, createdDate);
+    public Goal withComplete(boolean newComplete) {
+        return new Goal(name, description, priority, id, newComplete, null, createdDate);
     }
 
     @NonNull
@@ -91,5 +91,9 @@ public class Goal {
     @Override
     public int hashCode() {
         return Objects.hash(name, description, priority, id);
+    }
+
+    public Date getCompletedDate() {
+        return completedDate;
     }
 }

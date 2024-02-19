@@ -61,7 +61,7 @@ public class CreateGoalDialogFragment extends DialogFragment {
         // sort order will be replaced
         var goal = new Goal(front, back, 0, 0, date);
 
-        activityModel.getGoalRepository().save(goal);
+        activityModel.getDay().getGoalRepository().save(goal);
 
         dialog.dismiss();
     }
