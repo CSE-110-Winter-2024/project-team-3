@@ -8,11 +8,12 @@ import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
 import edu.ucsd.cse110.successorator.lib.domain.Day;
 import edu.ucsd.cse110.successorator.lib.domain.GoalRepository;
+import edu.ucsd.cse110.successorator.lib.domain.MockDay;
 
 public class MainViewModel extends ViewModel {
-    private final @NonNull Day day;
+    private final @NonNull MockDay day;
 
-    public MainViewModel(Day day) {
+    public MainViewModel(@NonNull MockDay day) {
         this.day = day;
     }
 
@@ -22,11 +23,15 @@ public class MainViewModel extends ViewModel {
                     creationExtras -> {
                         var app = (SuccessoratorApplication) creationExtras.get(APPLICATION_KEY);
                         assert app != null;
-                        return new MainViewModel(app.getDay());
+                        return new MainViewModel(app.getMockDay());
                     });
 
     @NonNull
     public Day getDay() {
+        return day;
+    }
+    @NonNull
+    public MockDay getMockDay() {
         return day;
     }
 }

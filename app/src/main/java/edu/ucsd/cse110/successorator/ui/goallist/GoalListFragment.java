@@ -98,10 +98,7 @@ public class GoalListFragment extends Fragment {
         });
 
         view.nextDayButton.setOnClickListener(v -> {
-            SuccessDate oldDate = activityModel.getDay().getSuccessDate().getValue();
-            assert oldDate != null;
-            SuccessDate newDate = oldDate.nextDay();
-            activityModel.getDay().getSuccessDate().setValue(newDate);
+            activityModel.getMockDay().nextDay();
         });
 
         return view.getRoot();
