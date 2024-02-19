@@ -16,18 +16,5 @@ import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
 
 public class DayTest {
-    InMemoryDataSource dataSource = InMemoryDataSource.fromDefault();
-    GoalRepository goals = new SimpleGoalRepository(dataSource);
-    Subject<SuccessDate> successDate = new SimpleSubject<>();
-    LocalDate tempDate = LocalDate.now();
 
-    succes
-
-
-    @Test
-    public void dayChange() {
-        Day day = new Day(successDate, goals);
-
-        assertEquals(dataSource.getGoals().size(), 6);
-    }
 }
