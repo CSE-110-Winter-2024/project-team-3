@@ -1,8 +1,8 @@
 package edu.ucsd.cse110.successorator.lib.domain;
 
-import java.util.Date;
 import java.util.List;
 
+import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
 
 
@@ -19,5 +19,7 @@ public interface GoalRepository {
 
     void append(Goal goal);
 
-    public void complete(int id, Date completeDate);
+
+    void setCompleted(int id);
+    void setNonCompleted(int id);
 }
