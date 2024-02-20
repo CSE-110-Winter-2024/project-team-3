@@ -17,7 +17,7 @@ public interface Subject<T> {
      *
      * @return The current (possibly null) value of the subject.
      */
-    void setValue(T value);
+//    void setValue(T value);
 
 
     /**

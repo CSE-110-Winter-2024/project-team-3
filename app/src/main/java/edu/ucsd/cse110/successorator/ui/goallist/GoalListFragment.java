@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.FragmentGoalListBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
+import edu.ucsd.cse110.successorator.lib.domain.SuccessDate;
 
 
 public class GoalListFragment extends Fragment {
@@ -48,15 +49,35 @@ public class GoalListFragment extends Fragment {
         this.activityModel = modelProvider.get(MainViewModel.class);
 
 //         Initialize the Adapter (with an empty list for now)
-        this.adapter = new GoalListAdapter(requireContext(), List.of(), id -> {
-        });
+        this.adapter = new GoalListAdapter(requireContext(), List.of(), activityModel);
 
 //        this.adapter = new CardListAdapter(requireContext(), List.of(), activityModel::remove);
-        activityModel.getGoalRepository().findAll().observe(goals -> {
+        activityModel.getDay().getGoalRepository().findAll().observe(goals -> {
             if (goals == null) return;
-            var newOrderedGoals = goals.stream().sorted(Comparator.comparing(Goal::getCreatedDate)).collect(Collectors.toList());
+
+            List<Goal> nonCompletedGoals = new ArrayList<>();
+            List<Goal> completedGoals = new ArrayList<>();
+
+            for (var goal:goals) {
+                if (goal.isCompleted()) {
+                    completedGoals.add(goal);
+                } else {
+                    nonCompletedGoals.add(goal);
+                }
+            }
+
+            completedGoals = completedGoals.stream()
+                    .sorted(Comparator.comparing(Goal::getCreatedDate)).collect(Collectors.toList());
+            nonCompletedGoals = nonCompletedGoals.stream()
+                    .sorted(Comparator.comparing(Goal::getCreatedDate)).collect(Collectors.toList());
+
+
+            ArrayList<Goal> newOrderedGoals = new ArrayList<>();
+            newOrderedGoals.addAll(nonCompletedGoals);
+            newOrderedGoals.addAll(completedGoals);
+
             adapter.clear();
-            adapter.addAll(new ArrayList<>(newOrderedGoals)); // remember the mutable copy here!
+            adapter.addAll(newOrderedGoals); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
     }
@@ -69,14 +90,19 @@ public class GoalListFragment extends Fragment {
         // Set the adapter on the ListView
         view.goalList.setAdapter(adapter);
 
-        /*
-        view.createCardButton.setOnClickListener(v -> {
-            var dialogFragment = CreateGoalDialogFragment.newInstance();
-            dialogFragment.show(getParentFragmentManager(), "CreateGoalDialogFragment");
+        activityModel.getDay().getSuccessDate().observe(newDate -> {
+            if (newDate != null) {
+                String displayDate = newDate.getDayOfWeek()+"  "+newDate.getMonth()+"/"+newDate.getDay()+"/"+newDate.getYear();
+                this.view.dateText.setText(displayDate);
+            }
         });
 
-         */
-
+        view.nextDayButton.setOnClickListener(v -> {
+            SuccessDate oldDate = activityModel.getDay().getSuccessDate().getValue();
+            assert oldDate != null;
+            SuccessDate newDate = oldDate.nextDay();
+            activityModel.getDay().getSuccessDate().setValue(newDate);
+        });
 
         return view.getRoot();
     }
