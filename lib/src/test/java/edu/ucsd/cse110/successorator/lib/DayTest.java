@@ -1,6 +1,9 @@
 package edu.ucsd.cse110.successorator.lib.domain;
 
+import androidx.annotation.NonNull;
+
 import static org.junit.Assert.*;
+
 
 import org.junit.Test;
 
@@ -16,18 +19,21 @@ import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
 
 public class DayTest {
-    InMemoryDataSource dataSource = InMemoryDataSource.fromDefault();
-    GoalRepository goals = new SimpleGoalRepository(dataSource);
-    Subject<SuccessDate> successDate = new SimpleSubject<>();
+    InMemoryDataSource dataSource;
+    GoalRepository goals;
+    Day day;
+    Subject<SuccessDate> successDate;
     LocalDate tempDate = LocalDate.now();
-
-    succes
-
+    SuccessDate sd = new SuccessDate(tempDate.getYear(), tempDate.getMonth().getValue(), tempDate.getDayOfMonth());
 
     @Test
     public void dayChange() {
-        Day day = new Day(successDate, goals);
+        dataSource = InMemoryDataSource.fromDefault();
+        goals = new SimpleGoalRepository(dataSource);
+        successDate = new SimpleSubject<>();
+        successDate.setValue(sd);
 
+        day = new Day(successDate, goals);
         assertEquals(dataSource.getGoals().size(), 6);
     }
 }
