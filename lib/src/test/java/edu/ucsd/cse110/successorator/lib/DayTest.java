@@ -1,4 +1,4 @@
-package edu.ucsd.cse110.successorator.lib.domain;
+package edu.ucsd.cse110.successorator.lib;
 
 import static org.junit.Assert.*;
 
