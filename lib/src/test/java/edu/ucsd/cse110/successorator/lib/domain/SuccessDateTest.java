@@ -1,10 +1,12 @@
-package edu.ucsd.cse110.successorator.lib.domain;
+package edu.ucsd.cse110.successorator.lib;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
 import java.time.LocalDate;
+
+import edu.ucsd.cse110.successorator.lib.domain.SuccessDate;
 
 /**
  * Tests for SuccessDate Class type
