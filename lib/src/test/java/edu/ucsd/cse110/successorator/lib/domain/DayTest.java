@@ -1,4 +1,4 @@
-package edu.ucsd.cse110.successorator.lib;
+package edu.ucsd.cse110.successorator.lib.domain;
 
 import static org.junit.Assert.*;
 
@@ -19,7 +19,7 @@ public class DayTest {
     InMemoryDataSource dataSource;
     GoalRepository goals;
     Day day;
-    Subject<SuccessDate> successDate;
+    SimpleSubject<SuccessDate> successDate;
     LocalDate tempDate = LocalDate.now();
     SuccessDate sd = new SuccessDate(tempDate.getYear(), tempDate.getMonth().getValue(), tempDate.getDayOfMonth());
 
@@ -29,6 +29,7 @@ public class DayTest {
         goals = new SimpleGoalRepository(dataSource);
         successDate = new SimpleSubject<>();
         successDate.setValue(sd);
+
 
         day = new Day(successDate, goals);
         assertEquals(dataSource.getGoals().size(), 6);
