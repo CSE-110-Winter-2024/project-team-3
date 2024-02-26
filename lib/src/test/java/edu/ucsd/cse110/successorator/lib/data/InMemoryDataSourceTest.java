@@ -1,4 +1,6 @@
-package edu.ucsd.cse110.successorator;
+package edu.ucsd.cse110.successorator.lib;
+
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -6,8 +8,6 @@ import java.util.Date;
 
 import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
-
-import static org.junit.Assert.*;
 
 
 public class InMemoryDataSourceTest {
