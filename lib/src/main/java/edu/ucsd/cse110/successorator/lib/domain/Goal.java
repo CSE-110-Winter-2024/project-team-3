@@ -7,37 +7,32 @@ import java.util.Objects;
 
 public class Goal {
     private final @NonNull String name;
-    private final @NonNull String description;
     private final @NonNull Integer priority;
     private final @NonNull Integer id;
     private final @NonNull Boolean completed;
     private final Date completedDate;
     private final @NonNull Date createdDate;
+    public final @NonNull RecurringType recurringType;
 
-
-
-    public Goal(@NonNull String name, @NonNull String description, @NonNull Integer priority, @NonNull Integer id, @NonNull Boolean completed, Date completedDate, @NonNull Date createdDate) {
+    public Goal(@NonNull String name, @NonNull Integer priority,
+                @NonNull Integer id, @NonNull Boolean completed, Date completedDate,
+                @NonNull Date createdDate, @NonNull RecurringType recurringType) {
         this.name = name;
-        this.description = description;
         this.priority = priority;
         this.id = id;
         this.completed = completed;
         this.completedDate = completedDate;
         this.createdDate = createdDate;
+        this.recurringType = recurringType;
     }
 
-    public Goal(@NonNull String name, @NonNull String description, @NonNull Integer priority, @NonNull Integer id,@NonNull Date createdDate) {
-        this(name, description, priority, id, false, null,createdDate);
+    public Goal(@NonNull String name, @NonNull Integer priority, @NonNull Integer id,@NonNull Date createdDate, @NonNull RecurringType recurringType) {
+        this(name, priority, id, false, null,createdDate, recurringType);
     }
 
     @NonNull
     public String getName() {
         return name;
-    }
-
-    @NonNull
-    public String getDescription() {
-        return description;
     }
 
     @NonNull
@@ -68,16 +63,16 @@ public class Goal {
 
     @NonNull
     public Goal withPriority(int newPriority) {
-        return new Goal(name, description, newPriority, id, completed, completedDate, createdDate);
+        return new Goal(name, description, newPriority, id, completed, completedDate, createdDate, recurringType);
     }
     @NonNull
     public Goal withComplete(boolean newComplete) {
-        return new Goal(name, description, priority, id, newComplete, null, createdDate);
+        return new Goal(name, description, priority, id, newComplete, null, createdDate, recurringType);
     }
 
     @NonNull
     public Goal withId(int id) {
-        return new Goal(name, description, priority, id, completed, completedDate, createdDate);
+        return new Goal(name, description, priority, id, completed, completedDate, createdDate, recurringType);
     }
 
     @Override

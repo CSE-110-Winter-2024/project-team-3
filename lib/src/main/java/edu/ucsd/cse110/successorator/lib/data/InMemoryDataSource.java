@@ -1,11 +1,14 @@
 package edu.ucsd.cse110.successorator.lib.data;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
+import edu.ucsd.cse110.successorator.lib.domain.WeeklyRecurring;
 import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
 
@@ -104,12 +107,27 @@ public class InMemoryDataSource {
     }
 
     public final static List<Goal> DEFAULT_GOALS = List.of(
-            new Goal("SRP", "Single Responsibility Principle", 10, 1, new Date()),
-            new Goal("OCP", "Open-Closed Principle", 10, 2, new Date()),
-            new Goal("LSP", "Liskov Substitution Principle", 10, 3, new Date()),
-            new Goal("ISP", "Interface Segregation Principle", 10, 4, new Date()),
-            new Goal("DIP", "Dependency Inversion Principle", 10, 5, new Date()),
-            new Goal("LKP", "Least Knowledge Principle (Law of Demeter)", 10, 6, new Date())
+            new Goal(
+                    "Do HW",
+                    10,
+                    1,
+                    new Date(),
+                    new WeeklyRecurring(Date.from(Instant.parse("2018-10-28T15:23:01Z")))
+            ),
+            new Goal(
+                    "Update Project Board",
+                    10,
+                    2,
+                    new Date(),
+                    new WeeklyRecurring(Date.from(Instant.parse("2018-10-28T15:23:01Z")))
+            ),
+            new Goal(
+                    "Go to Park",
+                    10,
+                    3,
+                    new Date(),
+                    new WeeklyRecurring(Date.from(Instant.parse("2018-10-28T15:23:01Z")))
+            )
     );
 
     public static InMemoryDataSource fromDefault() {
