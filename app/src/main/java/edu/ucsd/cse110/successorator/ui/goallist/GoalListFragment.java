@@ -1,7 +1,6 @@
 package edu.ucsd.cse110.successorator.ui.goallist;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,10 @@ import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.FragmentGoalListBinding;
+import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
+import edu.ucsd.cse110.successorator.lib.domain.Day;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
+import edu.ucsd.cse110.successorator.lib.domain.SimpleGoalRepository;
 import edu.ucsd.cse110.successorator.lib.domain.SuccessDate;
 
 
@@ -52,7 +54,7 @@ public class GoalListFragment extends Fragment {
         this.adapter = new GoalListAdapter(requireContext(), List.of(), activityModel);
 
 //        this.adapter = new CardListAdapter(requireContext(), List.of(), activityModel::remove);
-        activityModel.getDay().getGoalRepository().findAll().observe(goals -> {
+        activityModel.getToday().getGoalRepository().findAll().observe(goals -> {
             if (goals == null) return;
 
             List<Goal> nonCompletedGoals = new ArrayList<>();
@@ -67,9 +69,9 @@ public class GoalListFragment extends Fragment {
             }
 
             completedGoals = completedGoals.stream()
-                    .sorted(Comparator.comparing(Goal::getCreatedDate)).collect(Collectors.toList());
+                    .sorted(Comparator.comparing(Goal::getDate)).collect(Collectors.toList());
             nonCompletedGoals = nonCompletedGoals.stream()
-                    .sorted(Comparator.comparing(Goal::getCreatedDate)).collect(Collectors.toList());
+                    .sorted(Comparator.comparing(Goal::getDate)).collect(Collectors.toList());
 
 
             ArrayList<Goal> newOrderedGoals = new ArrayList<>();
@@ -90,18 +92,15 @@ public class GoalListFragment extends Fragment {
         // Set the adapter on the ListView
         view.goalList.setAdapter(adapter);
 
-        activityModel.getDay().getSuccessDate().observe(newDate -> {
-            if (newDate != null) {
-                String displayDate = newDate.getDayOfWeek()+"  "+newDate.getMonth()+"/"+newDate.getDay()+"/"+newDate.getYear();
-                this.view.dateText.setText(displayDate);
-            }
+        activityModel.getDaySubject().observe(newDay -> {
+            assert newDay != null;
+            var newDate = newDay.getDate();
+            String displayDate = newDate.getDayOfWeek() + "  " + newDate.getMonth() + "/" + newDate.getDay() + "/" + newDate.getYear();
+            this.view.dateText.setText(displayDate);
         });
 
         view.nextDayButton.setOnClickListener(v -> {
-            SuccessDate oldDate = activityModel.getDay().getSuccessDate().getValue();
-            assert oldDate != null;
-            SuccessDate newDate = oldDate.nextDay();
-            activityModel.getDay().getSuccessDate().setValue(newDate);
+            activityModel.rollOverTmrToToday();
         });
 
         return view.getRoot();

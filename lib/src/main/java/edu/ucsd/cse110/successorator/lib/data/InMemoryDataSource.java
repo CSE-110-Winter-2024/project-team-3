@@ -1,6 +1,5 @@
 package edu.ucsd.cse110.successorator.lib.data;
 
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
+import edu.ucsd.cse110.successorator.lib.domain.GoalRecord;
 import edu.ucsd.cse110.successorator.lib.domain.WeeklyRecurring;
 import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
@@ -99,35 +99,22 @@ public class InMemoryDataSource {
         }
     }
 
-    public int getMaxPriority() {
-        return this.Goals.values().stream()
-                .map(Goal::getPriority)
-                .max(Integer::compareTo)
-                .orElse(Integer.MIN_VALUE);
-    }
+    public final static List<GoalRecord> DEFAULT_RECURRING_GOAL_RECORD = List.of(
+            new GoalRecord(
+                "Do HW",
+                1,
+                    Date.from(Instant.parse("2024-03-04T15:23:01Z")),
+                new WeeklyRecurring()
+            ),
+            new GoalRecord(
+                    "Do HW",
+                    1,
+                    Date.from(Instant.parse("2024-03-05T15:23:01Z")),
+                    new WeeklyRecurring()
+            )
+    );
 
     public final static List<Goal> DEFAULT_GOALS = List.of(
-            new Goal(
-                    "Do HW",
-                    10,
-                    1,
-                    new Date(),
-                    new WeeklyRecurring(Date.from(Instant.parse("2018-10-28T15:23:01Z")))
-            ),
-            new Goal(
-                    "Update Project Board",
-                    10,
-                    2,
-                    new Date(),
-                    new WeeklyRecurring(Date.from(Instant.parse("2018-10-28T15:23:01Z")))
-            ),
-            new Goal(
-                    "Go to Park",
-                    10,
-                    3,
-                    new Date(),
-                    new WeeklyRecurring(Date.from(Instant.parse("2018-10-28T15:23:01Z")))
-            )
     );
 
     public static InMemoryDataSource fromDefault() {

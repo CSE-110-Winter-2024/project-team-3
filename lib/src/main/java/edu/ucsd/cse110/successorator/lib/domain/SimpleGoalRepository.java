@@ -5,7 +5,7 @@ import java.util.List;
 import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
 
-public class SimpleGoalRepository implements GoalRepository{
+public class SimpleGoalRepository implements ListOfGoals {
     private final InMemoryDataSource dataSource;
 
     public SimpleGoalRepository(InMemoryDataSource dataSource) {
@@ -40,9 +40,7 @@ public class SimpleGoalRepository implements GoalRepository{
 
     @Override
     public void append(Goal goal) {
-        dataSource.putGoal(
-                goal.withPriority(dataSource.getMaxPriority() + 1)
-        );
+        dataSource.putGoal(goal);
     }
 
     @Override
