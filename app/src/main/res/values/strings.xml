@@ -2,4 +2,14 @@
     <string name="app_name">Successorator</string>
     <string name="placeholder">Placeholder</string>
     <string name="hello_world">Hello, World!</string>
+    <string name="h">H</string>
+    <string name="w">W</string>
+    <string name="e">E</string>
+    <string name="s">S</string>
+    <string name="weekly">Weekly</string>
+    <string name="monthly">Monthly</string>
+    <string name="yearly">Yearly</string>
+    <string name="daily">Daily</string>
+    <string name="one_time">One Time</string>
+    <string name="text">Text</string>
 </resources>
