@@ -8,7 +8,7 @@ import java.util.Map;
 
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 import edu.ucsd.cse110.successorator.lib.domain.GoalRecord;
-import edu.ucsd.cse110.successorator.lib.domain.WeeklyRecurring;
+import edu.ucsd.cse110.successorator.lib.domain.RecurringWeekly;
 import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
 
@@ -18,7 +18,7 @@ import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
  * for testing.
  */
 
-public class InMemoryDataSource {
+public class InMemoryGoalSource {
     private final Map<Integer, Goal> Goals
             = new HashMap<>();
     private final Map<Integer, MutableSubject<Goal>> GoalSubjects
@@ -28,7 +28,7 @@ public class InMemoryDataSource {
 
     private int nextid = 0;
 
-    public InMemoryDataSource() {
+    public InMemoryGoalSource() {
     }
 
     public List<Goal> getGoals() {
@@ -99,26 +99,11 @@ public class InMemoryDataSource {
         }
     }
 
-    public final static List<GoalRecord> DEFAULT_RECURRING_GOAL_RECORD = List.of(
-            new GoalRecord(
-                "Do HW",
-                1,
-                    Date.from(Instant.parse("2024-03-04T15:23:01Z")),
-                new WeeklyRecurring()
-            ),
-            new GoalRecord(
-                    "Do HW",
-                    1,
-                    Date.from(Instant.parse("2024-03-05T15:23:01Z")),
-                    new WeeklyRecurring()
-            )
-    );
-
     public final static List<Goal> DEFAULT_GOALS = List.of(
     );
 
-    public static InMemoryDataSource fromDefault() {
-        var data = new InMemoryDataSource();
+    public static InMemoryGoalSource fromDefault() {
+        var data = new InMemoryGoalSource();
         for (Goal Goal : DEFAULT_GOALS) {
             data.putGoal(Goal);
         }

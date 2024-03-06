@@ -14,7 +14,7 @@ import java.util.Date;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.FragmentDialogCreateGoalBinding;
-import edu.ucsd.cse110.successorator.lib.domain.OneTimeRecurring;
+import edu.ucsd.cse110.successorator.lib.domain.RecurringOneTime;
 import edu.ucsd.cse110.successorator.lib.domain.GoalRecord;
 
 public class CreateGoalDialogFragment extends DialogFragment {
@@ -60,7 +60,7 @@ public class CreateGoalDialogFragment extends DialogFragment {
         Date date = new Date();
 
         // sort order will be replaced
-        var recurringGoalRecord = new GoalRecord(front, 0, date, new OneTimeRecurring());
+        var recurringGoalRecord = new GoalRecord(front, 0, date, new RecurringOneTime());
         var goal = recurringGoalRecord.toGoal();
 
         activityModel.getToday().getGoalRepository().save(goal);

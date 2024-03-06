@@ -2,7 +2,8 @@ package edu.ucsd.cse110.successorator;
 
 import android.app.Application;
 
-import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
+import edu.ucsd.cse110.successorator.lib.data.InMemoryGoalRecordSource;
+import edu.ucsd.cse110.successorator.lib.data.InMemoryGoalSource;
 import edu.ucsd.cse110.successorator.lib.domain.ListOfGoalRecord;
 import edu.ucsd.cse110.successorator.lib.domain.SimpleListOfGoalRecord;
 
@@ -13,8 +14,8 @@ public class SuccessoratorApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        InMemoryDataSource dataSource;
-        dataSource = InMemoryDataSource.fromDefault();
+        InMemoryGoalRecordSource dataSource;
+        dataSource = InMemoryGoalRecordSource.fromDefault();
         this.listOfGoalRecord = new SimpleListOfGoalRecord(dataSource);
 
 

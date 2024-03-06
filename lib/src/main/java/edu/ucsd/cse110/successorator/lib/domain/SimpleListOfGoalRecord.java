@@ -1,16 +1,16 @@
 package edu.ucsd.cse110.successorator.lib.domain;
 
-import java.util.Date;
 import java.util.List;
 
-import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
+import edu.ucsd.cse110.successorator.lib.data.InMemoryGoalRecordSource;
+import edu.ucsd.cse110.successorator.lib.data.InMemoryGoalSource;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
 
 public class SimpleListOfGoalRecord implements ListOfGoalRecord {
-    InMemoryDataSource inMemoryDataSource;
+    InMemoryGoalRecordSource dataSource;
 
-    public SimpleListOfGoalRecord(InMemoryDataSource inMemoryDataSource) {
-        this.inMemoryDataSource = inMemoryDataSource;
+    public SimpleListOfGoalRecord(InMemoryGoalRecordSource inMemoryDataSource) {
+        this.dataSource = inMemoryDataSource;
     }
 
     @Override
@@ -25,22 +25,17 @@ public class SimpleListOfGoalRecord implements ListOfGoalRecord {
 
     @Override
     public void save(GoalRecord goal) {
-
+        dataSource.putGoalRecord(goal);
     }
 
     @Override
     public void save(List<GoalRecord> goals) {
-
+        dataSource.putGoalRecords(goals);
     }
 
     @Override
     public void remove(int id) {
-
-    }
-
-    @Override
-    public void append(GoalRecord goal) {
-
+        dataSource.removeGoalRecord(id);
     }
 
     @Override
@@ -50,16 +45,7 @@ public class SimpleListOfGoalRecord implements ListOfGoalRecord {
 
     @Override
     public Day createDay(SuccessDate date) {
-        return new Day(date, new SimpleGoalRepository(InMemoryDataSource.fromDefault()));
+        return new Day(date, new SimpleListOfGoals(InMemoryGoalSource.fromDefault()));
     }
 
-    @Override
-    public void setCompleted(int id) {
-
-    }
-
-    @Override
-    public void setNonCompleted(int id) {
-
-    }
 }

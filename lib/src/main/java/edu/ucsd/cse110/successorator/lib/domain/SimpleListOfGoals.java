@@ -2,13 +2,13 @@ package edu.ucsd.cse110.successorator.lib.domain;
 
 import java.util.List;
 
-import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
+import edu.ucsd.cse110.successorator.lib.data.InMemoryGoalSource;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
 
-public class SimpleGoalRepository implements ListOfGoals {
-    private final InMemoryDataSource dataSource;
+public class SimpleListOfGoals implements ListOfGoals {
+    private final InMemoryGoalSource dataSource;
 
-    public SimpleGoalRepository(InMemoryDataSource dataSource) {
+    public SimpleListOfGoals(InMemoryGoalSource dataSource) {
         this.dataSource = dataSource;
     }
 

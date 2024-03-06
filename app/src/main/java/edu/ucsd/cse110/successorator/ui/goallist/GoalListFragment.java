@@ -17,11 +17,7 @@ import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.FragmentGoalListBinding;
-import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
-import edu.ucsd.cse110.successorator.lib.domain.Day;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
-import edu.ucsd.cse110.successorator.lib.domain.SimpleGoalRepository;
-import edu.ucsd.cse110.successorator.lib.domain.SuccessDate;
 
 
 public class GoalListFragment extends Fragment {

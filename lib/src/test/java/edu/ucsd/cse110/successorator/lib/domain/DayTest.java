@@ -7,11 +7,11 @@ import org.junit.Test;
 import java.time.LocalDate;
 
 
-import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
+import edu.ucsd.cse110.successorator.lib.data.InMemoryGoalSource;
 import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
 
 public class DayTest {
-    InMemoryDataSource dataSource;
+    InMemoryGoalSource dataSource;
     ListOfGoals goals;
     Day day;
     SimpleSubject<SuccessDate> successDate;
@@ -20,8 +20,8 @@ public class DayTest {
 
     @Test
     public void dayChange() {
-        dataSource = InMemoryDataSource.fromDefault();
-        goals = new SimpleGoalRepository(dataSource);
+        dataSource = InMemoryGoalSource.fromDefault();
+        goals = new SimpleListOfGoals(dataSource);
         successDate = new SimpleSubject<>();
         successDate.setValue(sd);
 

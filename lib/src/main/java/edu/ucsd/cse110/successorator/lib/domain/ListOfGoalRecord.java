@@ -16,12 +16,8 @@ public interface ListOfGoalRecord {
 
     void remove(int id);
 
-    void append(GoalRecord goal);
 
     Day createDay(SuccessDate date, Day previosuDay);
     Day createDay(SuccessDate date);
 
-
-    void setCompleted(int id);
-    void setNonCompleted(int id);
 }

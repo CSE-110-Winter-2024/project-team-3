@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import java.util.Date;
 
-import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
+import edu.ucsd.cse110.successorator.lib.data.InMemoryGoalSource;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 
 
@@ -15,21 +15,21 @@ public class InMemoryDataSourceTest {
 
     @Test
     public void emptyInsert() {
-        InMemoryDataSource dataSource = new InMemoryDataSource();
+        InMemoryGoalSource dataSource = new InMemoryGoalSource();
         assertEquals(dataSource.getGoals().size(), 0);
 
         dataSource.putGoal(test1);
         assertEquals(dataSource.getGoals().size(), 1);
 
-        dataSource = new InMemoryDataSource();
-        dataSource.putGoals(InMemoryDataSource.DEFAULT_GOALS);
+        dataSource = new InMemoryGoalSource();
+        dataSource.putGoals(InMemoryGoalSource.DEFAULT_GOALS);
         assertEquals(dataSource.getGoals().size(), 6);
     }
 
     @Test
     public void nonEmptyInsert() {
-        InMemoryDataSource dataSource = new InMemoryDataSource();
-        dataSource.putGoals(InMemoryDataSource.DEFAULT_GOALS);
+        InMemoryGoalSource dataSource = new InMemoryGoalSource();
+        dataSource.putGoals(InMemoryGoalSource.DEFAULT_GOALS);
         assertEquals(dataSource.getGoals().size(), 6);
 
         var before = dataSource.getGoal(dataSource.getGoals().size() - 1);

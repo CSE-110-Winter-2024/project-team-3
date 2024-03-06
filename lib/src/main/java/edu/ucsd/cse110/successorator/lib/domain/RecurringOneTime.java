@@ -1,16 +1,14 @@
 package edu.ucsd.cse110.successorator.lib.domain;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
-public class OneTimeRecurring implements RecurringType{
+public class RecurringOneTime implements RecurringType{
 
     @Override
     public RecurringType.RepeatType getType() {
-        return RecurringType.RepeatType.WEEKLY;
+        return RepeatType.ONE_TIME;
     }
 
     @Override

@@ -4,9 +4,9 @@ import java.time.DayOfWeek;
 import java.util.Calendar;
 import java.util.Date;
 
-public class WeeklyRecurring implements RecurringType{
+public class RecurringWeekly implements RecurringType{
 
-    public WeeklyRecurring() {
+    public RecurringWeekly() {
 
     }
 
