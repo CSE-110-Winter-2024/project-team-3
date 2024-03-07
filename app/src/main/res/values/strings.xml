@@ -17,4 +17,7 @@
     <string name="tomorrow">Tomorrow</string>
     <string name="pending">Pending</string>
     <string name="recurring">Recurring</string>
+    <string name="today_mo_3_4">Today Mo 3/4</string>
+    <string name="add_goal">add goal</string>
+    <string name="no_goals_for_the_day_click_the_at_the_upper_right_to_enter_your_most_important_thing">No goals for the Day. Click the + at the upper right to enter your Most Important Thing.</string>
 </resources>

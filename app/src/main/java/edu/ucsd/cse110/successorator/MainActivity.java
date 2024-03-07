@@ -57,10 +57,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         var itemId = item.getItemId();
-        if (itemId == R.id.add_task_button) {
+//        if (itemId == R.id.add_task_button) {
             var dialogFragment = CreateGoalDialogFragment.newInstance();
             dialogFragment.show( getSupportFragmentManager(), "CreateGoalDialogFragment");
-        }
+//        }
 
         return super.onOptionsItemSelected(item);
     }

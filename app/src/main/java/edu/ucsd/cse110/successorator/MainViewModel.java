@@ -21,8 +21,8 @@ public class MainViewModel extends ViewModel {
     private final @NonNull GoalRepository goalRepository;
     private final @NonNull MutableSubject<SuccessDate> todayDate;
     private final @NonNull MutableSubject<SuccessDate> tmrDate;
-    private final @NonNull Subject<List<Goal>> todayGoals;
-    private final @NonNull Subject<List<Goal>> tmrGoals;
+    private @NonNull MutableSubject<Subject<List<Goal>>> todayGoals;
+    private @NonNull MutableSubject<Subject<List<Goal>>> tmrGoals;
     private final @NonNull Subject<List<Goal>> pendingGoals;
     private final @NonNull Subject<List<Goal>> recurringGoals;
 
@@ -31,14 +31,26 @@ public class MainViewModel extends ViewModel {
 
         SuccessDate date = SuccessDate.fromJavaDate(new Date());
         this.todayDate = new SimpleSubject<>();
-        this.todayDate.setValue(date);
         this.tmrDate = new SimpleSubject<>();
-        this.tmrDate.setValue(date.nextDay());
+        this.todayGoals = new SimpleSubject<>();
+        this.tmrGoals = new SimpleSubject<>();
 
-        this.todayGoals = goalRepository.findAll(todayDate.getValue());
-        this.tmrGoals = goalRepository.findAll(tmrDate.getValue());
+        this.todayDate.observe(successDate -> {
+            if (successDate != null) {
+                this.todayGoals.setValue(goalRepository.findAll(successDate));
+            }
+        });
+        this.tmrDate.observe(successDate -> {
+            if (successDate != null) {
+                this.tmrGoals.setValue(goalRepository.findAll(successDate));
+            }
+        });
         this.pendingGoals = goalRepository.findPending();
         this.recurringGoals = goalRepository.findRecurring();
+
+
+        this.todayDate.setValue(date);
+        this.tmrDate.setValue(date.nextDay());
     }
 
     public static final ViewModelInitializer<MainViewModel> initializer =
@@ -51,15 +63,11 @@ public class MainViewModel extends ViewModel {
                     });
 
     @NonNull
-    public void rollOverTmrToToday() {
-        SuccessDate oldDate = tmrDate.getValue();
-        assert oldDate != null;
-        SuccessDate newDate = oldDate.nextDay();
+    public void mockAdvanceDay() {
+        todayDate.setValue(todayDate.getValue().nextDay());
+        tmrDate.setValue(tmrDate.getValue().nextDay());
 
 
-//        var thirdDay = getListOfGoalRecord().createDay(newDate);
-
-        //TODO:: !!!!!!!!!!!!!!!!!!!!!!!
     }
 
     public void putGoal(Goal goal) {
@@ -85,12 +93,12 @@ public class MainViewModel extends ViewModel {
     }
 
     @NonNull
-    public Subject<List<Goal>> getTodayGoals() {
+    public MutableSubject<Subject<List<Goal>>> getTodayGoals() {
         return todayGoals;
     }
 
     @NonNull
-    public Subject<List<Goal>> getTmrGoals() {
+    public MutableSubject<Subject<List<Goal>>> getTmrGoals() {
         return tmrGoals;
     }
 

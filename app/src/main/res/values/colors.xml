@@ -13,4 +13,5 @@
     <color name="W_color">#92E3FD</color>
     <color name="S_color">#EFCAFF</color>
     <color name="E_color">#DFEED4</color>
+    <color name="unselected_color">#DDDDDD</color>
 </resources>

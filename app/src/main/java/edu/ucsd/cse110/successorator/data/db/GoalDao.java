@@ -22,7 +22,7 @@ public interface GoalDao {
 
 
 //    @Query("SELECT * FROM Goal WHERE :date == :date")
-    @Query("SELECT * FROM Goal WHERE assignDate BETWEEN :startDate AND :endDate ")
+    @Query("SELECT * FROM Goal WHERE (assignDate BETWEEN :startDate AND :endDate) OR (recurringType = 'DAILY') OR (recurringType = 'WEEKLY' AND strftime('%w', DATETIME(ROUND(assignDate/1000), 'unixepoch')) = strftime('%w', DATETIME(ROUND(:startDate/1000), 'unixepoch'))) ")
     LiveData<List<GoalEntity>> findAllAsLiveData(Long startDate, Long endDate);
 
 
