@@ -50,20 +50,21 @@ public class GoalListAdapter extends ArrayAdapter<Goal> {
             binding = ListItemGoalBinding.inflate(layoutInflater, parent, false);
         }
 
+        // Populate the view with the flashcard's data.
+        binding.goalTitle.setText(goal.getName());
+
+
         if (goal.isCompleted()) {
             binding.goalCheckBox.setChecked(true);
         } else {
             binding.goalCheckBox.setChecked(false);
         }
 
-        // Populate the view with the flashcard's data.
-        binding.goalTitle.setText(goal.getName());
-
         binding.goalCheckBox.setOnClickListener(v -> {
             if (binding.goalCheckBox.isChecked()) {
-                activityModel.getToday().getGoalRepository().setCompleted(goal.getId());
+                activityModel.setCompleted(goal.getId());
             } else {
-                activityModel.getToday().getGoalRepository().setNonCompleted(goal.getId());
+                activityModel.setNonCompleted(goal.getId());
             }
         });
 
@@ -71,10 +72,10 @@ public class GoalListAdapter extends ArrayAdapter<Goal> {
             Log.i("GoalListAdapter", "Goal item is clicked");
             if (binding.goalCheckBox.isChecked()) {
                 binding.goalCheckBox.setChecked(false);
-                activityModel.getToday().getGoalRepository().setNonCompleted(goal.getId());
+                activityModel.setNonCompleted(goal.getId());
             } else {
                 binding.goalCheckBox.setChecked(true);
-                activityModel.getToday().getGoalRepository().setCompleted(goal.getId());
+                activityModel.setCompleted(goal.getId());
             }
         });
 

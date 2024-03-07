@@ -8,16 +8,16 @@ public class Goal {
     private final @NonNull Integer id;
     private final @NonNull String name;
     private final @NonNull Boolean completed;
-    private final @NonNull Date date;
-    public final @NonNull GoalRecord recurringGoalRecord;
+    private final Date assignDate;
+    public final @NonNull RecurringType recurringType;
 
     public Goal(@NonNull String name, @NonNull Integer id, @NonNull Boolean completed,
-                        @NonNull Date date, @NonNull GoalRecord recurringGoalRecord) {
+                        Date assignDate, @NonNull RepeatType repeatType) {
         this.name = name;
         this.id = id;
         this.completed = completed;
-        this.date = date;
-        this.recurringGoalRecord = recurringGoalRecord;
+        this.assignDate = assignDate;
+        this.recurringType = RecurringTypeFactory.create(repeatType);
     }
 
     @NonNull
@@ -26,8 +26,8 @@ public class Goal {
     }
 
     @NonNull
-    public Date getDate(){
-        return date;
+    public Date getAssignDate(){
+        return assignDate;
     }
 
     @NonNull
@@ -42,12 +42,32 @@ public class Goal {
 
     @NonNull
     public Goal withComplete(boolean newComplete) {
-        return new Goal(name, id, newComplete, date, recurringGoalRecord);
+        return new Goal(name, id, newComplete, assignDate, recurringType.getType());
     }
 
     @NonNull
     public Goal withId(int id) {
-        return new Goal(name, id, completed, date, recurringGoalRecord);
+        return new Goal(name, id, completed, assignDate, recurringType.getType());
+    }
+
+
+    /**
+     "do hw" weekly 3/3/2024
+     "go to school" weekly 3/3/2024
+
+     "do hw".ifDateMatchesRecurring(3/4/2024) -> false
+     "do hw".ifDateMatchesRecurring(10/3/2024) -> true
+     */
+    public boolean ifDateMatchesRecurring(SuccessDate checkDate) {
+        return recurringType.ifDateMatchesRecurring(SuccessDate.fromJavaDate(assignDate), checkDate);
+    }
+
+    public String getDescription() {
+        return recurringType.getDescription(assignDate);
+    }
+
+    public RepeatType getType() {
+        return recurringType.getType();
     }
 
 }

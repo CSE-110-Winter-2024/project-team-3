@@ -50,7 +50,7 @@ public class GoalListFragment extends Fragment {
         this.adapter = new GoalListAdapter(requireContext(), List.of(), activityModel);
 
 //        this.adapter = new CardListAdapter(requireContext(), List.of(), activityModel::remove);
-        activityModel.getToday().getGoalRepository().findAll().observe(goals -> {
+        activityModel.getTodayGoals().observe(goals -> {
             if (goals == null) return;
 
             List<Goal> nonCompletedGoals = new ArrayList<>();
@@ -65,9 +65,9 @@ public class GoalListFragment extends Fragment {
             }
 
             completedGoals = completedGoals.stream()
-                    .sorted(Comparator.comparing(Goal::getDate)).collect(Collectors.toList());
+                    .sorted(Comparator.comparing(Goal::getAssignDate)).collect(Collectors.toList());
             nonCompletedGoals = nonCompletedGoals.stream()
-                    .sorted(Comparator.comparing(Goal::getDate)).collect(Collectors.toList());
+                    .sorted(Comparator.comparing(Goal::getAssignDate)).collect(Collectors.toList());
 
 
             ArrayList<Goal> newOrderedGoals = new ArrayList<>();
@@ -78,6 +78,7 @@ public class GoalListFragment extends Fragment {
             adapter.addAll(newOrderedGoals); // remember the mutable copy here!
             adapter.notifyDataSetChanged();
         });
+
     }
 
     @Nullable
@@ -88,15 +89,15 @@ public class GoalListFragment extends Fragment {
         // Set the adapter on the ListView
         view.goalList.setAdapter(adapter);
 
-        activityModel.getDaySubject().observe(newDay -> {
-            assert newDay != null;
-            var newDate = newDay.getDate();
-            String displayDate = newDate.getDayOfWeek() + "  " + newDate.getMonth() + "/" + newDate.getDay() + "/" + newDate.getYear();
-            this.view.dateText.setText(displayDate);
-        });
-
         view.nextDayButton.setOnClickListener(v -> {
             activityModel.rollOverTmrToToday();
+        });
+
+        activityModel.getTodayDate().observe(newDate -> {
+            if (newDate != null) {
+                String displayDate = newDate.getDayOfWeekString() + "  " + newDate.getMonth() + "/" + newDate.getDay() + "/" + newDate.getYear();
+                this.view.dateText.setText(displayDate);
+            }
         });
 
         return view.getRoot();

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
-import edu.ucsd.cse110.successorator.lib.domain.GoalRecord;
 import edu.ucsd.cse110.successorator.lib.domain.RecurringWeekly;
 import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
