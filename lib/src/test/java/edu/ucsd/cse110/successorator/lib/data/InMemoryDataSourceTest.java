@@ -9,17 +9,16 @@ import java.util.Date;
 
 import edu.ucsd.cse110.successorator.lib.data.InMemoryGoalSource;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
-import edu.ucsd.cse110.successorator.lib.domain.GoalRecord;
 import edu.ucsd.cse110.successorator.lib.domain.RecurringOneTime;
 import edu.ucsd.cse110.successorator.lib.domain.RecurringType;
 import edu.ucsd.cse110.successorator.lib.domain.RecurringWeekly;
+import edu.ucsd.cse110.successorator.lib.domain.RepeatType;
+import edu.ucsd.cse110.successorator.lib.domain.SuccessDate;
 
 
 public class InMemoryDataSourceTest {
-    GoalRecord goalRecordTest1 = new GoalRecord("Do dishes", 1, Date.from(Instant.parse("2024-03-05T15:23:01Z")), new RecurringWeekly());
-    Goal test1 = goalRecordTest1.toGoal();
-    GoalRecord goalRecordTest2 = new GoalRecord("Go to math office hours", 2,  Date.from(Instant.parse("2024-04-01T15:23:01Z")), new RecurringOneTime());
-    Goal test2 = goalRecordTest2.toGoal();
+    Goal test1 = new Goal("Do dishes", 1, false, Date.from(Instant.parse("2024-03-05T15:23:01Z")), RepeatType.WEEKLY);
+    Goal test2 = new Goal("Go to math office hours", 2, false, Date.from(Instant.parse("2024-04-01T15:23:01Z")), RepeatType.ONE_TIME);
 
     @Test
     public void emptyInsert() {
@@ -56,17 +55,27 @@ public class InMemoryDataSourceTest {
         assertEquals(dataSource.getGoals().size(), 1);
         dataSource.putGoal(test2);
         assertEquals(dataSource.getGoals().size(), 2);
-        assertEquals(goalRecordTest1.ifDateMatchesRecurring(Date.from(Instant.parse("2024-03-06T15:23:01Z"))), false);
-        assertEquals(goalRecordTest1.ifDateMatchesRecurring(Date.from(Instant.parse("2024-03-12T15:23:01Z"))), true);
-        assertEquals(goalRecordTest1.getStartDate(), Date.from(Instant.parse("2024-03-05T15:23:01Z")));
-        assertEquals(goalRecordTest1.getDescription(), "Weekly on WEDNESDAY");
-        assertEquals(goalRecordTest1.getType(), RecurringType.RepeatType.WEEKLY);
-
-        assertEquals(goalRecordTest2.ifDateMatchesRecurring(Date.from(Instant.parse("2024-04-01T15:23:01Z"))), true);
-        assertEquals(goalRecordTest2.ifDateMatchesRecurring(Date.from(Instant.parse("2024-04-08T15:25:01Z"))), false);
-        assertEquals(goalRecordTest2.getStartDate(), Date.from(Instant.parse("2024-04-01T15:23:01Z")));
-        assertEquals(goalRecordTest2.getDescription(), "One-time on Mon Apr 01 08:23:01 PDT 2024");
-        assertEquals(goalRecordTest2.getType(), RecurringType.RepeatType.ONE_TIME);
+        assertEquals(test1.ifDateMatchesRecurring(new SuccessDate(2024,3,6)), false);
+        assertEquals(test1.ifDateMatchesRecurring(new SuccessDate(2024,3,12)), true);
+        assertEquals(test1.getAssignDate(), Date.from(Instant.parse("2024-03-05T15:23:01Z")));
+        assertEquals(test1.getDescription(), "Weekly on WEDNESDAY");
+        assertEquals(test1.getType(), RepeatType.WEEKLY);
 
     }
+
+    @Test
+    public void recurringOneTime() {
+        InMemoryGoalSource dataSource = new InMemoryGoalSource();
+        dataSource.putGoal(test1);
+        assertEquals(dataSource.getGoals().size(), 1);
+        dataSource.putGoal(test2);
+        assertEquals(dataSource.getGoals().size(), 2);
+
+        assertEquals(test2.ifDateMatchesRecurring(new SuccessDate(2024,4,1)), true);
+        assertEquals(test2.ifDateMatchesRecurring(new SuccessDate(2024,4,8)), false);
+        assertEquals(test2.getAssignDate(), Date.from(Instant.parse("2024-04-01T15:23:01Z")));
+        assertEquals(test2.getDescription(), "One-time on Mon Apr 01 08:23:01 PDT 2024");
+        assertEquals(test2.getType(), RepeatType.ONE_TIME);
+    }
+
 }

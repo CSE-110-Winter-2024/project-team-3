@@ -13,7 +13,7 @@ public class RecurringOneTime implements RecurringType{
 
     @Override
     public boolean ifDateMatchesRecurring(SuccessDate startDate, SuccessDate checkDate) {
-        return (startDate == checkDate);
+        return startDate.equals(checkDate);
     }
 
     @Override
