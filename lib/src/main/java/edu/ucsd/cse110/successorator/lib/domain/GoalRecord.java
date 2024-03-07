@@ -57,7 +57,7 @@ public class GoalRecord {
     }
 
     public RecurringType.RepeatType getType() {
-        return RecurringType.RepeatType.WEEKLY;
+        return recurringType.getType();
     }
 
 

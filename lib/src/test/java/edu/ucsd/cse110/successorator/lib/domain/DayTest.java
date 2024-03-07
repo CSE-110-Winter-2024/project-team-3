@@ -26,7 +26,7 @@ public class DayTest {
         successDate.setValue(sd);
 
 
-        day = new Day(successDate, goals);
+        day = new Day(sd, goals);
         assertEquals(dataSource.getGoals().size(), 6);
     }
 }

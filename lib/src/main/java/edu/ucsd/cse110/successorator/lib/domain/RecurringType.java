@@ -4,7 +4,7 @@ import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Date;
 
-interface RecurringType {
+public interface RecurringType {
     enum RepeatType {
         ONE_TIME,
         DAILY,
