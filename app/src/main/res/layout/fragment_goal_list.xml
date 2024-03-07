@@ -6,27 +6,32 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <ImageButton
-            android:id="@+id/add_task"
+            android:id="@+id/add_task_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="7dp"
             android:src="@drawable/ic_add"
-            tools:layout_editor_absoluteX="356dp"
-            tools:layout_editor_absoluteY="3dp" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/focusMenuButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="3dp"
             android:src="@drawable/ic_menu"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="3dp" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/type_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_down_drop_arrow"
@@ -44,24 +49,29 @@
             android:text="Today Mo 3/4"
             android:textSize="24sp"
             app:layout_constraintEnd_toStartOf="@id/focusMenuButton"
-            app:layout_constraintStart_toStartOf="@id/add_task"
+            app:layout_constraintStart_toStartOf="@id/add_task_button"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/nextDayButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_task_button"
+            app:srcCompat="@drawable/ic_arrow" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ListView
         android:id="@+id/goal_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        tools:layout_editor_absoluteY="37dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/constraintLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
         tools:listitem="@layout/list_item_goal"></ListView>
-
-    <ImageButton
-        android:id="@+id/nextDayButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_arrow"
-        tools:layout_editor_absoluteX="356dp"
-        tools:layout_editor_absoluteY="45dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

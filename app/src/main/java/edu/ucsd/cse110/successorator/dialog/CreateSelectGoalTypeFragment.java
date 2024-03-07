@@ -2,7 +2,6 @@ package edu.ucsd.cse110.successorator.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,19 +9,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import java.util.Date;
-
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.FragmentDialogCreateGoalBinding;
-import edu.ucsd.cse110.successorator.lib.domain.Goal;
 
-public class CreateGoalDialogFragment extends DialogFragment {
+public class CreateSelectGoalTypeFragment extends DialogFragment {
     private FragmentDialogCreateGoalBinding view;
     private MainViewModel activityModel;
 
-    CreateGoalDialogFragment() {}
+    CreateSelectGoalTypeFragment() {}
 
-    public static CreateGoalDialogFragment newInstance() {
+    public static DialogFragment newInstance() {
         var fragment = new CreateGoalDialogFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -45,27 +41,6 @@ public class CreateGoalDialogFragment extends DialogFragment {
         this.view = FragmentDialogCreateGoalBinding.inflate(getLayoutInflater());
 
         return new AlertDialog.Builder(getActivity())
-                .setTitle("New Card")
-                .setMessage("Please provide the new card text.")
-                .setView(view.getRoot())
-                .setPositiveButton("Create", this::onPositiveButtonClick)
-                .setNegativeButton("Cancel", this::onNegativeButtonClick)
                 .create();
-    }
-
-    private void onPositiveButtonClick(DialogInterface dialog, int which) {
-        var front = view.cardEditText.getText().toString();
-        Date date = new Date();
-
-        // sort order will be replaced
-        var goal = new Goal(front, "filler", 0, 0, date);
-
-        activityModel.getDay().getGoalRepository().save(goal);
-
-        dialog.dismiss();
-    }
-
-    private void onNegativeButtonClick(DialogInterface dialog, int which) {
-        dialog.cancel();
     }
 }

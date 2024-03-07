@@ -59,7 +59,7 @@ public class GoalListAdapter extends ArrayAdapter<Goal> {
 
         // Populate the view with the flashcard's data.
         binding.goalTitle.setText(goal.getName());
-        binding.goalDescription.setText(goal.getDescription());
+//        binding.goalDescription.setText(goal.getDescription());
 
         binding.goalCheckBox.setOnClickListener(v -> {
             if (binding.goalCheckBox.isChecked()) {

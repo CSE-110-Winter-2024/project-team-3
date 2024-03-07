@@ -12,4 +12,9 @@
     <string name="daily">Daily</string>
     <string name="one_time">One Time</string>
     <string name="text">Text</string>
+
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="pending">Pending</string>
+    <string name="recurring">Recurring</string>
 </resources>
