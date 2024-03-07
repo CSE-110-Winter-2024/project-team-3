@@ -56,6 +56,7 @@ public class MainViewModel extends ViewModel {
         assert oldDate != null;
         SuccessDate newDate = oldDate.nextDay();
 
+
 //        var thirdDay = getListOfGoalRecord().createDay(newDate);
 
         //TODO:: !!!!!!!!!!!!!!!!!!!!!!!
