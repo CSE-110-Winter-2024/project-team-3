@@ -8,34 +8,37 @@ import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
-import edu.ucsd.cse110.successorator.lib.domain.Day;
-import edu.ucsd.cse110.successorator.lib.domain.ListOfGoalRecord;
+import edu.ucsd.cse110.successorator.lib.domain.Goal;
+import edu.ucsd.cse110.successorator.lib.domain.GoalRepository;
 import edu.ucsd.cse110.successorator.lib.domain.SuccessDate;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
 import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
 
 public class MainViewModel extends ViewModel {
-    private final @NonNull ListOfGoalRecord listOfGoalRecord;
-    private final @NonNull MutableSubject<Day> today;
-    private final @NonNull MutableSubject<Day> tmr;
+    private final @NonNull GoalRepository goalRepository;
+    private final @NonNull MutableSubject<SuccessDate> todayDate;
+    private final @NonNull MutableSubject<SuccessDate> tmrDate;
+    private final @NonNull Subject<List<Goal>> todayGoals;
+    private final @NonNull Subject<List<Goal>> tmrGoals;
+    private final @NonNull Subject<List<Goal>> pendingGoals;
+    private final @NonNull Subject<List<Goal>> recurringGoals;
 
-    public MainViewModel(@NonNull ListOfGoalRecord listOfGoalRecord) {
-        this.listOfGoalRecord = listOfGoalRecord;
-        this.today = new SimpleSubject<>();
-        this.tmr = new SimpleSubject<>();
+    public MainViewModel(@NonNull GoalRepository goalRepository) {
+        this.goalRepository = goalRepository;
 
-        LocalDate tempDate = LocalDate.now();
-        SuccessDate date = new SuccessDate(tempDate.getYear(), tempDate.getMonth().getValue(), tempDate.getDayOfMonth());
+        SuccessDate date = SuccessDate.fromJavaDate(new Date());
+        this.todayDate = new SimpleSubject<>();
+        this.todayDate.setValue(date);
+        this.tmrDate = new SimpleSubject<>();
+        this.tmrDate.setValue(date.nextDay());
 
-
-        this.today.setValue(
-                listOfGoalRecord.createDay(date)
-        );
-        this.tmr.setValue(
-                listOfGoalRecord.createDay(date.nextDay())
-        );
+        this.todayGoals = goalRepository.findAll(todayDate.getValue());
+        this.tmrGoals = goalRepository.findAll(tmrDate.getValue());
+        this.pendingGoals = goalRepository.findPending();
+        this.recurringGoals = goalRepository.findRecurring();
     }
 
     public static final ViewModelInitializer<MainViewModel> initializer =
@@ -44,31 +47,59 @@ public class MainViewModel extends ViewModel {
                     creationExtras -> {
                         var app = (SuccessoratorApplication) creationExtras.get(APPLICATION_KEY);
                         assert app != null;
-                        return new MainViewModel(app.getListOfGoalRecord());
+                        return new MainViewModel(app.getGoalRepository());
                     });
-
-    public Subject<Day> getDaySubject() {
-        return this.today;
-    }
-
-    @NonNull
-    public Day getToday() {
-        assert today.getValue() != null;
-        return today.getValue();
-    }
 
     @NonNull
     public void rollOverTmrToToday() {
-        SuccessDate oldDate = getToday().getDate();
-        SuccessDate newDate = oldDate.nextDay().nextDay();
+        SuccessDate oldDate = tmrDate.getValue();
+        assert oldDate != null;
+        SuccessDate newDate = oldDate.nextDay();
 
-        var thirdDay = getListOfGoalRecord().createDay(newDate);
+//        var thirdDay = getListOfGoalRecord().createDay(newDate);
 
         //TODO:: !!!!!!!!!!!!!!!!!!!!!!!
     }
 
+    public void putGoal(Goal goal) {
+        goalRepository.append(goal);
+    }
+
+    public void setCompleted(Integer id) {
+        goalRepository.setCompleted(id);
+    }
+
+    public void setNonCompleted(Integer id) {
+        goalRepository.setNonCompleted(id);
+    }
+
     @NonNull
-    public ListOfGoalRecord getListOfGoalRecord() {
-        return listOfGoalRecord;
+    public MutableSubject<SuccessDate> getTodayDate() {
+        return todayDate;
+    }
+
+    @NonNull
+    public MutableSubject<SuccessDate> getTmrDate() {
+        return tmrDate;
+    }
+
+    @NonNull
+    public Subject<List<Goal>> getTodayGoals() {
+        return todayGoals;
+    }
+
+    @NonNull
+    public Subject<List<Goal>> getTmrGoals() {
+        return tmrGoals;
+    }
+
+    @NonNull
+    public Subject<List<Goal>> getPendingGoals() {
+        return pendingGoals;
+    }
+
+    @NonNull
+    public Subject<List<Goal>> getRecurringGoals() {
+        return recurringGoals;
     }
 }

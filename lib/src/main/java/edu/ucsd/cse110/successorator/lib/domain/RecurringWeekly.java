@@ -24,9 +24,9 @@ public class RecurringWeekly implements RecurringType{
 
 
     @Override
-    public boolean ifDateMatchesRecurring(Date startDate, Date checkDate) {
-        int thisWeekInt = getWeekInt(startDate);
-        int checkWeekInt = getWeekInt(checkDate);
+    public boolean ifDateMatchesRecurring(SuccessDate startDate, SuccessDate checkDate) {
+        int thisWeekInt = startDate.getDayOfWeek();
+        int checkWeekInt = checkDate.getDayOfWeek();
         return thisWeekInt == checkWeekInt;
     }
 

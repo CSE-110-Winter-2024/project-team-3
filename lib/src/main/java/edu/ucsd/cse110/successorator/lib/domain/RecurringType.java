@@ -4,14 +4,7 @@ import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Date;
 
-interface RecurringType {
-    enum RepeatType {
-        ONE_TIME,
-        DAILY,
-        WEEKLY,
-        MONTHLY,
-        YEARLY
-    };
+public interface RecurringType {
     public RepeatType getType();
 
     /**
@@ -21,7 +14,7 @@ interface RecurringType {
      "do hw".ifDateMatchesRecurring(3/4/2024) -> false
      "do hw".ifDateMatchesRecurring(10/3/2024) -> true
      */
-    public boolean ifDateMatchesRecurring(Date startDate, Date checkDate);
+    public boolean ifDateMatchesRecurring(SuccessDate startDate, SuccessDate checkDate);
 
     public String getDescription(Date startDate);
 }

@@ -2,21 +2,40 @@ package edu.ucsd.cse110.successorator;
 
 import android.app.Application;
 
-import edu.ucsd.cse110.successorator.lib.data.InMemoryGoalRecordSource;
+import androidx.room.Room;
+
+import edu.ucsd.cse110.successorator.data.db.RoomGoalRepository;
+import edu.ucsd.cse110.successorator.data.db.SuccessoratorDatabase;
 import edu.ucsd.cse110.successorator.lib.data.InMemoryGoalSource;
-import edu.ucsd.cse110.successorator.lib.domain.ListOfGoalRecord;
-import edu.ucsd.cse110.successorator.lib.domain.SimpleListOfGoalRecord;
+import edu.ucsd.cse110.successorator.lib.domain.GoalRepository;
 
 public class SuccessoratorApplication extends Application {
-    private ListOfGoalRecord listOfGoalRecord;
+    private GoalRepository goalRepository;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        InMemoryGoalRecordSource dataSource;
-        dataSource = InMemoryGoalRecordSource.fromDefault();
-        this.listOfGoalRecord = new SimpleListOfGoalRecord(dataSource);
+
+        var database = Room.databaseBuilder(
+                        getApplicationContext(),
+                        SuccessoratorDatabase.class,
+                        "secards-database"
+                )
+                .allowMainThreadQueries()
+                .build();
+
+        this.goalRepository =
+                new RoomGoalRepository(database.goalDao());
+
+        var sharePreferences = getSharedPreferences("secards", MODE_PRIVATE);
+        var isFirstRun = sharePreferences.getBoolean("isFirstRun", true);
+
+        if (isFirstRun && database.goalDao().count() == 0) {
+
+            sharePreferences.edit().putBoolean("isFirstRun", false).apply();
+        }
+
 
 
 //        Handler handler=new Handler();
@@ -31,7 +50,7 @@ public class SuccessoratorApplication extends Application {
     }
 
 
-    public ListOfGoalRecord getListOfGoalRecord() {
-        return listOfGoalRecord;
+    public GoalRepository getGoalRepository() {
+        return goalRepository;
     }
 }
