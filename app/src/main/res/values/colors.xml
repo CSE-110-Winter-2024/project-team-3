@@ -7,4 +7,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!--    Begin colors used for Application    -->
+    <color name="H_color">#FFFBB9</color>
+    <color name="W_color">#92E3FD</color>
+    <color name="S_color">#EFCAFF</color>
+    <color name="E_color">#DFEED4</color>
 </resources>

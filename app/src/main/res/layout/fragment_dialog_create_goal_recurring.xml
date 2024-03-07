@@ -10,17 +10,17 @@
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
+        android:autofillHints=""
         android:ems="10"
         android:hint="@string/text"
         android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:autofillHints="" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <RadioGroup
-        android:id="@+id/radioGroup2"
+        android:id="@+id/HWSE_RadioButton"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginStart="16dp"
@@ -100,6 +100,7 @@
                 app:layout_constraintEnd_toStartOf="@id/E_button"
                 app:layout_constraintStart_toEndOf="@+id/W_button"
                 app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </RadioGroup>
@@ -112,42 +113,68 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup2">
+        app:layout_constraintTop_toBottomOf="@+id/HWSE_RadioButton">
 
         <RadioButton
-            android:id="@+id/radioButton6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/one_time" />
-
-        <RadioButton
-            android:id="@+id/radioButton5"
+            android:id="@+id/daily"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/daily" />
 
         <RadioButton
-            android:id="@+id/radioButton3"
+            android:id="@+id/weekly"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/weekly" />
+            android:text="Weekly" />
 
         <RadioButton
-            android:id="@+id/radioButton4"
+            android:id="@+id/monthly"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/monthly" />
+            android:text="Monthly" />
 
         <RadioButton
-            android:id="@+id/radioButton8"
+            android:id="@+id/yearly"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/yearly" />
+            android:text="Yearly" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/pickTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="time picker button uwu"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Starting:"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </RadioGroup>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:text="Save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
