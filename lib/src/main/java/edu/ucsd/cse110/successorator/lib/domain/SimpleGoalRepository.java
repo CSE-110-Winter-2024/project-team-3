@@ -33,6 +33,10 @@ public class SimpleGoalRepository implements GoalRepository {
     public Subject<List<Goal>> findPending() {
         return null;
     }
+    @Override
+    public Subject<List<Goal>> findOneTime() {
+        return null;
+    }
 
     @Override
     public Subject<List<Goal>> findRecurring() {

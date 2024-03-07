@@ -65,6 +65,20 @@ public class RoomGoalRepository implements GoalRepository {
 
 
     @Override
+    public Subject<List<Goal>> findOneTime() {
+        var entitiesLiveData = goalDao.findAllOneTime();
+        var goalsLiveData = map(entitiesLiveData, entities -> {
+            return entities.stream()
+                    .map(GoalEntity::toGoal)
+                    .collect(Collectors.toList());
+        });
+
+        Log.i("roomGoalRepository", (goalsLiveData.getValue() == null) ? "is null" : "not null");
+
+        return new LiveDataMutableSubjectAdapter<>(goalsLiveData);
+    }
+
+    @Override
     public Subject<List<Goal>> findPending() {
         var entitiesLiveData = goalDao.findAllPending();
         var goalsLiveData = map(entitiesLiveData, entities -> {

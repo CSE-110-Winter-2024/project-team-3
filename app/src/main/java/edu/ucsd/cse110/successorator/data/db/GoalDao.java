@@ -32,6 +32,8 @@ public interface GoalDao {
 
     @Query("SELECT * FROM Goal WHERE NOT (recurringType = 'ONE_TIME')")
     LiveData<List<GoalEntity>> findAllRecurring();
+    @Query("SELECT * FROM Goal WHERE (recurringType = 'ONE_TIME')")
+    LiveData<List<GoalEntity>> findAllOneTime();
 
     @Query("SELECT * FROM Goal WHERE id = :id")
     LiveData<GoalEntity> findAsLiveData(int id);

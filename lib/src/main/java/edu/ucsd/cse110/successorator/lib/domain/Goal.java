@@ -1,6 +1,7 @@
 package edu.ucsd.cse110.successorator.lib.domain;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.Date;
 
@@ -25,7 +26,7 @@ public class Goal {
         return name;
     }
 
-    @NonNull
+    @Nullable
     public Date getAssignDate(){
         return assignDate;
     }

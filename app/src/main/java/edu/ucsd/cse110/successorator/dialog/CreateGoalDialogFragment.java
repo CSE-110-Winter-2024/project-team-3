@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
@@ -21,6 +22,7 @@ import edu.ucsd.cse110.successorator.databinding.FragmentDialogCreateGoalBinding
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 import edu.ucsd.cse110.successorator.lib.domain.RecurringOneTime;
 import edu.ucsd.cse110.successorator.lib.domain.RepeatType;
+import edu.ucsd.cse110.successorator.lib.domain.SuccessDate;
 
 public class CreateGoalDialogFragment extends DialogFragment {
     private FragmentDialogCreateGoalBinding view;
@@ -87,9 +89,19 @@ public class CreateGoalDialogFragment extends DialogFragment {
                 .create();
     }
 
+    private Date getDateWithCurrentTime(SuccessDate setToTime, Date currentTimeDate) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentTimeDate);
+        calendar.set(Calendar.YEAR, setToTime.getYear());
+        calendar.set(Calendar.MONTH, setToTime.getMonth() - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, setToTime.getDay());
+        return calendar.getTime();
+    }
+
     private void onPositiveButtonClick(DialogInterface dialog, int which) {
         var front = view.cardEditText.getText().toString();
-        Date date = new Date();
+        Date date = getDateWithCurrentTime(activityModel.getTodayDate().getValue(), new Date());
+        Log.e("date", date.toString());
 
         if (front.strip().length() <= 0) {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -105,7 +117,7 @@ public class CreateGoalDialogFragment extends DialogFragment {
         RadioButton selectedRecurringRb = view.RecurringOptions.findViewById(view.RecurringOptions.getCheckedRadioButtonId());
         String selectedRecurringString = selectedRecurringRb.getTag().toString();
 
-        var goal = new Goal(front, null, false, new Date(), RepeatType.valueOf(selectedRecurringString));
+        var goal = new Goal(front, null, false, date, RepeatType.valueOf(selectedRecurringString));
 
         activityModel.putGoal(goal);
 

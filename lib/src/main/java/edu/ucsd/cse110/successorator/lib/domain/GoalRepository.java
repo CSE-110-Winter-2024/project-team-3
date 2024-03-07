@@ -12,6 +12,8 @@ public interface GoalRepository {
     Subject<List<Goal>> findAll(SuccessDate successDate);
     Subject<List<Goal>> findPending();
 
+    public Subject<List<Goal>> findOneTime();
+
     Subject<List<Goal>> findRecurring();
 
     void save(Goal goal);

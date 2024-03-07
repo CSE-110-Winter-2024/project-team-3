@@ -81,16 +81,39 @@ public class GoalListFragment extends Fragment {
         });
 
 
-        activityModel.getTodayGoals().observe(goalsSubject -> {
-            if (goalsSubject == null) return;
+        activityModel.getTodayGoals().observe(goals -> {
+            if (goals == null) return;
 
-            if (pastObserver != null) {
-                goalsSubject.removeObserver(pastObserver);
+            if (goals.size() == 0) {
+                view.noGoalsText.setVisibility(View.VISIBLE);
+            } else {
+                view.noGoalsText.setVisibility(View.GONE);
             }
 
-            pastObserver = new GoalListObserver(adapter, view);
+            List<Goal> nonCompletedGoals = new ArrayList<>();
+            List<Goal> completedGoals = new ArrayList<>();
 
-            goalsSubject.observe(pastObserver);
+            for (var goal : goals) {
+                if (goal.isCompleted()) {
+                    completedGoals.add(goal);
+                } else {
+                    nonCompletedGoals.add(goal);
+                }
+            }
+
+            completedGoals = completedGoals.stream()
+                    .sorted(Comparator.comparing(Goal::getAssignDate)).collect(Collectors.toList());
+            nonCompletedGoals = nonCompletedGoals.stream()
+                    .sorted(Comparator.comparing(Goal::getAssignDate)).collect(Collectors.toList());
+
+
+            ArrayList<Goal> newOrderedGoals = new ArrayList<>();
+            newOrderedGoals.addAll(nonCompletedGoals);
+            newOrderedGoals.addAll(completedGoals);
+
+            adapter.clear();
+            adapter.addAll(newOrderedGoals); // remember the mutable copy here!
+            adapter.notifyDataSetChanged();
         });
 
         return view.getRoot();
