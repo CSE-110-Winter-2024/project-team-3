@@ -1,6 +1,5 @@
 package edu.ucsd.cse110.successorator.util;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
 public class MutableLiveDataSubjectAdapter<T>
@@ -14,7 +13,7 @@ public class MutableLiveDataSubjectAdapter<T>
         }
 
         @Override
-        public void setValue(@NonNull T value){
+        public void setValue(T value){
                 mutableAdaptee.setValue(value);
         }
 }

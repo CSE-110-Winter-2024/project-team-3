@@ -1,13 +1,11 @@
 package edu.ucsd.cse110.successorator.lib.data;
 
-import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
-import edu.ucsd.cse110.successorator.lib.domain.RecurringWeekly;
 import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
 
@@ -17,7 +15,7 @@ import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
  * for testing.
  */
 
-public class InMemoryGoalSource {
+public class InMemoryDataSource {
     private final Map<Integer, Goal> Goals
             = new HashMap<>();
     private final Map<Integer, MutableSubject<Goal>> GoalSubjects
@@ -27,7 +25,7 @@ public class InMemoryGoalSource {
 
     private int nextid = 0;
 
-    public InMemoryGoalSource() {
+    public InMemoryDataSource() {
     }
 
     public List<Goal> getGoals() {
@@ -98,11 +96,24 @@ public class InMemoryGoalSource {
         }
     }
 
+    public int getMaxPriority() {
+        return this.Goals.values().stream()
+                .map(Goal::getPriority)
+                .max(Integer::compareTo)
+                .orElse(Integer.MIN_VALUE);
+    }
+
     public final static List<Goal> DEFAULT_GOALS = List.of(
+            new Goal("SRP", "Single Responsibility Principle", 10, 1, new Date()),
+            new Goal("OCP", "Open-Closed Principle", 10, 2, new Date()),
+            new Goal("LSP", "Liskov Substitution Principle", 10, 3, new Date()),
+            new Goal("ISP", "Interface Segregation Principle", 10, 4, new Date()),
+            new Goal("DIP", "Dependency Inversion Principle", 10, 5, new Date()),
+            new Goal("LKP", "Least Knowledge Principle (Law of Demeter)", 10, 6, new Date())
     );
 
-    public static InMemoryGoalSource fromDefault() {
-        var data = new InMemoryGoalSource();
+    public static InMemoryDataSource fromDefault() {
+        var data = new InMemoryDataSource();
         for (Goal Goal : DEFAULT_GOALS) {
             data.putGoal(Goal);
         }

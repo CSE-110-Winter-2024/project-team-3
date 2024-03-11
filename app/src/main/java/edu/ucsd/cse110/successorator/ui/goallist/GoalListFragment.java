@@ -1,6 +1,7 @@
 package edu.ucsd.cse110.successorator.ui.goallist;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,16 +18,14 @@ import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.FragmentGoalListBinding;
-import edu.ucsd.cse110.successorator.dialog.CreateGoalDialogFragment;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
-import edu.ucsd.cse110.successorator.lib.util.Observer;
+import edu.ucsd.cse110.successorator.lib.domain.SuccessDate;
+
 
 public class GoalListFragment extends Fragment {
     private MainViewModel activityModel;
     private FragmentGoalListBinding view;
     private GoalListAdapter adapter;
-
-    private Observer<List<Goal>> pastObserver = null;
 
     public GoalListFragment() {
         // Required empty public constructor
@@ -53,7 +52,34 @@ public class GoalListFragment extends Fragment {
         this.adapter = new GoalListAdapter(requireContext(), List.of(), activityModel);
 
 //        this.adapter = new CardListAdapter(requireContext(), List.of(), activityModel::remove);
+        activityModel.getDay().getGoalRepository().findAll().observe(goals -> {
+            if (goals == null) return;
 
+            List<Goal> nonCompletedGoals = new ArrayList<>();
+            List<Goal> completedGoals = new ArrayList<>();
+
+            for (var goal:goals) {
+                if (goal.isCompleted()) {
+                    completedGoals.add(goal);
+                } else {
+                    nonCompletedGoals.add(goal);
+                }
+            }
+
+            completedGoals = completedGoals.stream()
+                    .sorted(Comparator.comparing(Goal::getCreatedDate)).collect(Collectors.toList());
+            nonCompletedGoals = nonCompletedGoals.stream()
+                    .sorted(Comparator.comparing(Goal::getCreatedDate)).collect(Collectors.toList());
+
+
+            ArrayList<Goal> newOrderedGoals = new ArrayList<>();
+            newOrderedGoals.addAll(nonCompletedGoals);
+            newOrderedGoals.addAll(completedGoals);
+
+            adapter.clear();
+            adapter.addAll(newOrderedGoals); // remember the mutable copy here!
+            adapter.notifyDataSetChanged();
+        });
     }
 
     @Nullable
@@ -64,56 +90,18 @@ public class GoalListFragment extends Fragment {
         // Set the adapter on the ListView
         view.goalList.setAdapter(adapter);
 
-        view.nextDayButton.setOnClickListener(v -> {
-            activityModel.mockAdvanceDay();
-        });
-
-        activityModel.getTodayDate().observe(newDate -> {
+        activityModel.getDay().getSuccessDate().observe(newDate -> {
             if (newDate != null) {
-                String displayDate = newDate.getDayOfWeekString() + "  " + newDate.getMonth() + "/" + newDate.getDay() + "/" + newDate.getYear();
+                String displayDate = newDate.getDayOfWeek()+"  "+newDate.getMonth()+"/"+newDate.getDay()+"/"+newDate.getYear();
                 this.view.dateText.setText(displayDate);
             }
         });
 
-        view.addTaskButton.setOnClickListener(v -> {
-            var dialogFragment = CreateGoalDialogFragment.newInstance();
-            dialogFragment.show(getChildFragmentManager(), "test");
-        });
-
-
-        activityModel.getTodayGoals().observe(goals -> {
-            if (goals == null) return;
-
-            if (goals.size() == 0) {
-                view.noGoalsText.setVisibility(View.VISIBLE);
-            } else {
-                view.noGoalsText.setVisibility(View.GONE);
-            }
-
-            List<Goal> nonCompletedGoals = new ArrayList<>();
-            List<Goal> completedGoals = new ArrayList<>();
-
-            for (var goal : goals) {
-                if (goal.isCompleted()) {
-                    completedGoals.add(goal);
-                } else {
-                    nonCompletedGoals.add(goal);
-                }
-            }
-
-            completedGoals = completedGoals.stream()
-                    .sorted(Comparator.comparing(Goal::getAssignDate)).collect(Collectors.toList());
-            nonCompletedGoals = nonCompletedGoals.stream()
-                    .sorted(Comparator.comparing(Goal::getAssignDate)).collect(Collectors.toList());
-
-
-            ArrayList<Goal> newOrderedGoals = new ArrayList<>();
-            newOrderedGoals.addAll(nonCompletedGoals);
-            newOrderedGoals.addAll(completedGoals);
-
-            adapter.clear();
-            adapter.addAll(newOrderedGoals); // remember the mutable copy here!
-            adapter.notifyDataSetChanged();
+        view.nextDayButton.setOnClickListener(v -> {
+            SuccessDate oldDate = activityModel.getDay().getSuccessDate().getValue();
+            assert oldDate != null;
+            SuccessDate newDate = oldDate.nextDay();
+            activityModel.getDay().getSuccessDate().setValue(newDate);
         });
 
         return view.getRoot();
