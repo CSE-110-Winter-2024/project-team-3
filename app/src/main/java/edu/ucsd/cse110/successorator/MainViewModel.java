@@ -20,13 +20,18 @@ import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
 
 public class MainViewModel extends ViewModel {
+
+    enum DisplayGoalType {
+        TODAY,
+        TOMORROW,
+        PENDING,
+        RECURRING
+    }
     private final @NonNull GoalRepository goalRepository;
     private final @NonNull MutableSubject<SuccessDate> todayDate;
-    private final @NonNull MutableSubject<SuccessDate> tmrDate;
-    private final @NonNull MutableSubject<List<Goal>> todayGoals;
-    private final @NonNull MutableSubject<List<Goal>> tmrGoals;
-    private final @NonNull MutableSubject<List<Goal>> pendingGoals;
-    private final @NonNull MutableSubject<List<Goal>> recurringGoals;
+    private final @NonNull MutableSubject<List<Goal>> displayGoals;
+    private final @NonNull MutableSubject<String> topDateString;
+    private final @NonNull MutableSubject<DisplayGoalType> displayGoalType;
     private final @NonNull Subject<List<Goal>> allGoals;
 
     public MainViewModel(@NonNull GoalRepository goalRepository) {
@@ -34,61 +39,70 @@ public class MainViewModel extends ViewModel {
 
         SuccessDate date = SuccessDate.fromJavaDate(new Date());
         this.todayDate = new SimpleSubject<>();
-        this.tmrDate = new SimpleSubject<>();
-        this.todayGoals = new SimpleSubject<>();
-        this.tmrGoals = new SimpleSubject<>();
-        this.pendingGoals = new SimpleSubject<>();
-        this.recurringGoals = new SimpleSubject<>();
-
+        this.displayGoals = new SimpleSubject<>();
+        this.topDateString = new SimpleSubject<>();
+        this.displayGoalType = new SimpleSubject<>();
         this.allGoals = goalRepository.findAll();
 
         this.todayDate.observe(successDate -> {
-            updateGoalLists();
-        });
-        this.tmrDate.observe(successDate -> {
             updateGoalLists();
         });
         this.allGoals.observe(v -> {
             updateGoalLists();
         });
 
-
+        this.topDateString.setValue("default");
         this.todayDate.setValue(date);
-        this.tmrDate.setValue(date.nextDay());
+        this.displayGoalType.setValue(DisplayGoalType.RECURRING);
     }
 
     private void updateGoalLists() {
-        List<Goal> todayGoals = new ArrayList<>();
-        List<Goal> tmrGoals = new ArrayList<>();
-        List<Goal> pendingGoals = new ArrayList<>();
-        List<Goal> recurringGoals = new ArrayList<>();
-
-        SuccessDate todayDate = this.todayDate.getValue();
-        SuccessDate tmrDate = this.tmrDate.getValue();
-
+        List<Goal> displayGoals = new ArrayList<>();
+        SuccessDate todayDateTemp = this.todayDate.getValue();
         List<Goal> allGoals = this.allGoals.getValue();
+
         if (allGoals == null) return;
 
-        for (var goal : allGoals) {
-            if (goal.getType() != RepeatType.ONE_TIME) recurringGoals.add(goal);
-            if (goal.getAssignDate() == null) {
-                pendingGoals.add(goal);
-                continue;
-            }
+        String displayDate;
 
-            // on the same day
-            if (goal.ifDateMatchesRecurring(todayDate)) {
-                todayGoals.add(goal);
-            }
-            if (goal.ifDateMatchesRecurring(tmrDate)) {
-                tmrGoals.add(goal);
+        for (var goal : allGoals) {
+            switch (this.displayGoalType.getValue()) {
+                case TODAY:
+                    if (goal.ifDateMatchesRecurring(todayDateTemp)) {
+                        displayGoals.add(goal);
+                    }
+                    displayDate = "Today " +
+                            todayDateTemp.getDayOfWeekString().substring(0, 3) + "  " +
+                            todayDateTemp.getMonth() + "/" +
+                            todayDateTemp.getDay();
+                    this.topDateString.setValue(displayDate);
+                    break;
+                case TOMORROW:
+                    if (goal.ifDateMatchesRecurring(todayDateTemp.nextDay())) {
+                        displayGoals.add(goal);
+                    }
+                    displayDate = "Tomorrow " +
+                            todayDateTemp.nextDay().getDayOfWeekString().substring(0, 3) + "  " +
+                            todayDateTemp.nextDay().getMonth() + "/" +
+                            todayDateTemp.nextDay().getDay();
+                    this.topDateString.setValue(displayDate);
+                    break;
+                case PENDING:
+                    if (goal.getAssignDate() == null) {
+                        displayGoals.add(goal);
+                        continue;
+                    }
+                    this.topDateString.setValue("Pending");
+                    break;
+                case RECURRING:
+                    if (goal.getType() != RepeatType.ONE_TIME) displayGoals.add(goal);
+                    this.topDateString.setValue("Recurring");
+                    break;
             }
         }
 
-        this.todayGoals.setValue(todayGoals);
-        this.tmrGoals.setValue(tmrGoals);
-        this.pendingGoals.setValue(pendingGoals);
-        this.recurringGoals.setValue(recurringGoals);
+
+        this.displayGoals.setValue(displayGoals);
     }
 
     public static final ViewModelInitializer<MainViewModel> initializer =
@@ -103,9 +117,6 @@ public class MainViewModel extends ViewModel {
     @NonNull
     public void mockAdvanceDay() {
         todayDate.setValue(todayDate.getValue().nextDay());
-        tmrDate.setValue(tmrDate.getValue().nextDay());
-
-
     }
 
     public void putGoal(Goal goal) {
@@ -126,27 +137,12 @@ public class MainViewModel extends ViewModel {
     }
 
     @NonNull
-    public Subject<SuccessDate> getTmrDate() {
-        return tmrDate;
+    public Subject<List<Goal>> getDisplayGoals() {
+        return displayGoals;
     }
 
     @NonNull
-    public Subject<List<Goal>> getTodayGoals() {
-        return todayGoals;
-    }
-
-    @NonNull
-    public Subject<List<Goal>> getTmrGoals() {
-        return tmrGoals;
-    }
-
-    @NonNull
-    public Subject<List<Goal>> getPendingGoals() {
-        return pendingGoals;
-    }
-
-    @NonNull
-    public Subject<List<Goal>> getRecurringGoals() {
-        return recurringGoals;
+    public Subject<String> getTopDateString() {
+        return topDateString;
     }
 }

@@ -68,11 +68,8 @@ public class GoalListFragment extends Fragment {
             activityModel.mockAdvanceDay();
         });
 
-        activityModel.getTodayDate().observe(newDate -> {
-            if (newDate != null) {
-                String displayDate = newDate.getDayOfWeekString() + "  " + newDate.getMonth() + "/" + newDate.getDay() + "/" + newDate.getYear();
-                this.view.dateText.setText(displayDate);
-            }
+        activityModel.getTopDateString().observe(newTopDateString -> {
+            view.dateText.setText(newTopDateString);
         });
 
         view.addTaskButton.setOnClickListener(v -> {
@@ -81,7 +78,7 @@ public class GoalListFragment extends Fragment {
         });
 
 
-        activityModel.getTodayGoals().observe(goals -> {
+        activityModel.getDisplayGoals().observe(goals -> {
             if (goals == null) return;
 
             if (goals.size() == 0) {
