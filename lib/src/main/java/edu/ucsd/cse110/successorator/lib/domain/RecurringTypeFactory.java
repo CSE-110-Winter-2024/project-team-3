@@ -10,13 +10,13 @@ public class RecurringTypeFactory {
             case ONE_TIME:
                 return new RecurringOneTime();
             case DAILY:
-                break;
+                return new RecurringDaily();
             case WEEKLY:
                 return new RecurringWeekly();
             case MONTHLY:
-                break;
+                return new RecurringMonthly();
             case YEARLY:
-                break;
+                return new RecurringYearly();
         }
         return null;
     }
