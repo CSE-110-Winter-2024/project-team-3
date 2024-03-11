@@ -10,15 +10,19 @@ public class Goal {
     private final @NonNull String name;
     private final @NonNull Boolean completed;
     private final Date assignDate;
+    private final Date currIter;
+    public final @NonNull String focus;
     public final @NonNull RecurringType recurringType;
 
     public Goal(@NonNull String name, @NonNull Integer id, @NonNull Boolean completed,
-                        Date assignDate, @NonNull RepeatType repeatType) {
+                        Date assignDate, Date currIter, @NonNull RepeatType repeatType, @NonNull String focus) {
         this.name = name;
         this.id = id;
         this.completed = completed;
         this.assignDate = assignDate;
+        this.currIter = currIter;
         this.recurringType = RecurringTypeFactory.create(repeatType);
+        this.focus = focus;
     }
 
     @NonNull
@@ -30,6 +34,9 @@ public class Goal {
     public Date getAssignDate(){
         return assignDate;
     }
+
+    @Nullable
+    public  Date getCurrIter() { return currIter;}
 
     @NonNull
     public Integer getId() {
@@ -43,12 +50,15 @@ public class Goal {
 
     @NonNull
     public Goal withComplete(boolean newComplete) {
-        return new Goal(name, id, newComplete, assignDate, recurringType.getType());
+        return new Goal(name, id, newComplete, assignDate, currIter, recurringType.getType(), focus);
     }
 
     @NonNull
+    public String get_focus(){return this.focus;}
+
+    @NonNull
     public Goal withId(int id) {
-        return new Goal(name, id, completed, assignDate, recurringType.getType());
+        return new Goal(name, id, completed, assignDate, currIter, recurringType.getType(), focus);
     }
 
 

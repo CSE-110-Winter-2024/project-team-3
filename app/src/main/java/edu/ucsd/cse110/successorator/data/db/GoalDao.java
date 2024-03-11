@@ -46,7 +46,7 @@ public interface GoalDao {
 
     @Transaction
     default int append(GoalEntity goal) {
-        var newGoal = new GoalEntity(goal.name, goal.completed, goal.assignDate, goal.repeatType);
+        var newGoal = new GoalEntity(goal.name, goal.completed, goal.assignDate, goal.repeatType, goal.focusType);
 
         return Math.toIntExact((Long) insert(newGoal));
     }

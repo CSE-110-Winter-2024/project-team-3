@@ -6,13 +6,14 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
+import edu.ucsd.cse110.successorator.lib.domain.Filter;
 import edu.ucsd.cse110.successorator.lib.domain.GoalRepository;
+import edu.ucsd.cse110.successorator.lib.domain.RecurringType;
 import edu.ucsd.cse110.successorator.lib.domain.RepeatType;
 import edu.ucsd.cse110.successorator.lib.domain.SuccessDate;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
@@ -29,6 +30,8 @@ public class MainViewModel extends ViewModel {
     private final @NonNull MutableSubject<List<Goal>> recurringGoals;
     private final @NonNull Subject<List<Goal>> allGoals;
 
+    private final @NonNull MutableSubject<String> focus;
+
     public MainViewModel(@NonNull GoalRepository goalRepository) {
         this.goalRepository = goalRepository;
 
@@ -39,6 +42,7 @@ public class MainViewModel extends ViewModel {
         this.tmrGoals = new SimpleSubject<>();
         this.pendingGoals = new SimpleSubject<>();
         this.recurringGoals = new SimpleSubject<>();
+        this.focus = new SimpleSubject<>();
 
         this.allGoals = goalRepository.findAll();
 
@@ -55,6 +59,7 @@ public class MainViewModel extends ViewModel {
 
         this.todayDate.setValue(date);
         this.tmrDate.setValue(date.nextDay());
+        this.focus.setValue("All");
     }
 
     private void updateGoalLists() {
@@ -85,10 +90,15 @@ public class MainViewModel extends ViewModel {
             }
         }
 
-        this.todayGoals.setValue(todayGoals);
-        this.tmrGoals.setValue(tmrGoals);
-        this.pendingGoals.setValue(pendingGoals);
-        this.recurringGoals.setValue(recurringGoals);
+        Filter filter_today = new Filter(todayGoals, focus.getValue());
+        Filter filter_tomorrow = new Filter(tmrGoals, focus.getValue());
+        Filter filter_pending = new Filter(pendingGoals, focus.getValue());
+        Filter filter_recurring = new Filter(recurringGoals, focus.getValue());
+
+        this.todayGoals.setValue(filter_today.filter_goals());
+        this.tmrGoals.setValue(filter_tomorrow.filter_goals());
+        this.pendingGoals.setValue(filter_pending.filter_goals());
+        this.recurringGoals.setValue(filter_recurring.filter_goals());
     }
 
     public static final ViewModelInitializer<MainViewModel> initializer =
@@ -106,6 +116,16 @@ public class MainViewModel extends ViewModel {
         tmrDate.setValue(tmrDate.getValue().nextDay());
 
 
+    }
+
+    public void move_unfinished_goal(){
+        List<Goal> unfinished_goal = new ArrayList<>();
+        for(Goal curr_goal : todayGoals.getValue()){
+            if(!curr_goal.isCompleted()){
+                unfinished_goal.add(curr_goal);
+            }
+        }
+        tmrGoals.setValue(unfinished_goal);
     }
 
     public void putGoal(Goal goal) {

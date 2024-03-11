@@ -25,26 +25,31 @@ public class GoalEntity {
     public Boolean completed;
     @ColumnInfo(name = "assignDate")
     public Date assignDate;
+    @ColumnInfo(name = "currDate")
+    public Date currDate;
     @ColumnInfo(name = "recurringType")
     public RepeatType repeatType;
+    @ColumnInfo(name = "focusType")
+    public String focusType;
 
 
-
-    public GoalEntity(@NonNull String name, @NonNull Boolean completed, Date assignDate, @NonNull RepeatType repeatType) {
+    public GoalEntity(@NonNull String name, @NonNull Boolean completed, Date assignDate, Date currIter, @NonNull RepeatType repeatType, String focusType) {
         this.name = name;
         this.completed = completed;
         this.assignDate = assignDate;
         this.repeatType = repeatType;
+        this.focusType = focusType;
+        this.currDate = currIter;
     }
 
 
     public static GoalEntity fromGoal(@NonNull Goal goal) {
-        var goa = new GoalEntity(goal.getName(), goal.isCompleted(), goal.getAssignDate(), goal.getType());
+        var goa = new GoalEntity(goal.getName(), goal.isCompleted(), goal.getAssignDate(), goal.getCurrIter(), goal.getType(), goal.get_focus());
         goa.id = goal.getId();
         return goa;
     }
 
     public @NonNull Goal toGoal() {
-        return new Goal(name, id, completed, assignDate, repeatType);
+        return new Goal(name, id, completed, assignDate, currDate, repeatType, focusType);
     }
 }
