@@ -1,33 +1,24 @@
 package edu.ucsd.cse110.successorator.lib.domain;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.Date;
-import java.util.Objects;
 
 public class Goal {
-    private final @NonNull String name;
-    private final @NonNull String description;
-    private final @NonNull Integer priority;
     private final @NonNull Integer id;
+    private final @NonNull String name;
     private final @NonNull Boolean completed;
-    private final Date completedDate;
-    private final @NonNull Date createdDate;
+    private final Date assignDate;
+    public final @NonNull RecurringType recurringType;
 
-
-
-    public Goal(@NonNull String name, @NonNull String description, @NonNull Integer priority, @NonNull Integer id, @NonNull Boolean completed, Date completedDate, @NonNull Date createdDate) {
+    public Goal(@NonNull String name, @NonNull Integer id, @NonNull Boolean completed,
+                        Date assignDate, @NonNull RepeatType repeatType) {
         this.name = name;
-        this.description = description;
-        this.priority = priority;
         this.id = id;
         this.completed = completed;
-        this.completedDate = completedDate;
-        this.createdDate = createdDate;
-    }
-
-    public Goal(@NonNull String name, @NonNull String description, @NonNull Integer priority, @NonNull Integer id,@NonNull Date createdDate) {
-        this(name, description, priority, id, false, null,createdDate);
+        this.assignDate = assignDate;
+        this.recurringType = RecurringTypeFactory.create(repeatType);
     }
 
     @NonNull
@@ -35,19 +26,9 @@ public class Goal {
         return name;
     }
 
-    @NonNull
-    public String getDescription() {
-        return description;
-    }
-
-    @NonNull
-    public Integer getPriority() {
-        return priority;
-    }
-
-    @NonNull
-    public Date getCreatedDate(){
-        return createdDate;
+    @Nullable
+    public Date getAssignDate(){
+        return assignDate;
     }
 
     @NonNull
@@ -56,44 +37,38 @@ public class Goal {
     }
 
     @NonNull
-    public Date getCompleted() {
-        return this.completedDate;
-    }
-
-    @NonNull
     public boolean isCompleted(){
         return this.completed;
     }
 
-
-    @NonNull
-    public Goal withPriority(int newPriority) {
-        return new Goal(name, description, newPriority, id, completed, completedDate, createdDate);
-    }
     @NonNull
     public Goal withComplete(boolean newComplete) {
-        return new Goal(name, description, priority, id, newComplete, null, createdDate);
+        return new Goal(name, id, newComplete, assignDate, recurringType.getType());
     }
 
     @NonNull
     public Goal withId(int id) {
-        return new Goal(name, description, priority, id, completed, completedDate, createdDate);
+        return new Goal(name, id, completed, assignDate, recurringType.getType());
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Goal)) return false;
-        Goal goal = (Goal) o;
-        return Objects.equals(name, goal.name) && Objects.equals(description, goal.description) && Objects.equals(priority, goal.priority) && Objects.equals(id, goal.id);
+
+    /**
+     "do hw" weekly 3/3/2024
+     "go to school" weekly 3/3/2024
+
+     "do hw".ifDateMatchesRecurring(3/4/2024) -> false
+     "do hw".ifDateMatchesRecurring(10/3/2024) -> true
+     */
+    public boolean ifDateMatchesRecurring(SuccessDate checkDate) {
+        return recurringType.ifDateMatchesRecurring(SuccessDate.fromJavaDate(assignDate), checkDate);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, description, priority, id);
+    public String getDescription() {
+        return recurringType.getDescription(assignDate);
     }
 
-    public Date getCompletedDate() {
-        return completedDate;
+    public RepeatType getType() {
+        return recurringType.getType();
     }
+
 }

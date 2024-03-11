@@ -2,13 +2,15 @@ package edu.ucsd.cse110.successorator.lib.domain;
 
 import java.util.List;
 
-import edu.ucsd.cse110.successorator.lib.data.InMemoryDataSource;
+import edu.ucsd.cse110.successorator.lib.data.InMemoryGoalSource;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
+import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
+import edu.ucsd.cse110.successorator.lib.util.Subject;
 
-public class SimpleGoalRepository implements GoalRepository{
-    private final InMemoryDataSource dataSource;
+public class SimpleGoalRepository implements GoalRepository {
+    private final InMemoryGoalSource dataSource;
 
-    public SimpleGoalRepository(InMemoryDataSource dataSource) {
+    public SimpleGoalRepository(InMemoryGoalSource dataSource) {
         this.dataSource = dataSource;
     }
 
@@ -20,6 +22,25 @@ public class SimpleGoalRepository implements GoalRepository{
     @Override
     public MutableSubject<List<Goal>> findAll() {
         return dataSource.getAllGoalsSubject();
+    }
+
+    @Override
+    public Subject<List<Goal>> findAll(SuccessDate successDate) {
+        return new SimpleSubject<>();
+    }
+
+    @Override
+    public Subject<List<Goal>> findPending() {
+        return null;
+    }
+    @Override
+    public Subject<List<Goal>> findOneTime() {
+        return null;
+    }
+
+    @Override
+    public Subject<List<Goal>> findRecurring() {
+        return null;
     }
 
     @Override
@@ -40,9 +61,7 @@ public class SimpleGoalRepository implements GoalRepository{
 
     @Override
     public void append(Goal goal) {
-        dataSource.putGoal(
-                goal.withPriority(dataSource.getMaxPriority() + 1)
-        );
+        dataSource.putGoal(goal);
     }
 
     @Override
