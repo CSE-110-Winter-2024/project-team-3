@@ -24,13 +24,6 @@ import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
 
 public class MainViewModel extends ViewModel {
-
-    enum DisplayGoalType {
-        TODAY,
-        TOMORROW,
-        PENDING,
-        RECURRING
-    };
     private final @NonNull GoalRepository goalRepository;
     private final @NonNull MutableSubject<SuccessDate> todayDate;
     private final @NonNull MutableSubject<List<Goal>> displayGoals;
@@ -253,5 +246,9 @@ public class MainViewModel extends ViewModel {
     @NonNull
     public Subject<String> getTopDateString() {
         return topDateString;
+    }
+
+    public void setDisplayGoalType(@NonNull DisplayGoalType displayGoalType) {
+        this.displayGoalType.setValue(displayGoalType);
     }
 }
