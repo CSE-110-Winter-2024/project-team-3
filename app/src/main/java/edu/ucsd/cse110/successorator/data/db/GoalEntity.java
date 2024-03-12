@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
+import edu.ucsd.cse110.successorator.lib.domain.FocusType;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 import edu.ucsd.cse110.successorator.lib.domain.RepeatType;
 
@@ -29,10 +30,10 @@ public class GoalEntity {
     @ColumnInfo(name = "recurringType")
     public RepeatType repeatType;
     @ColumnInfo(name = "focusType")
-    public String focusType;
+    public FocusType focusType;
 
 
-    public GoalEntity(@NonNull String name, @NonNull Boolean currCompleted, @NonNull Boolean nextCompleted, Date assignDate, Date currIterDate, @NonNull RepeatType repeatType, String focusType) {
+    public GoalEntity(@NonNull String name, @NonNull Boolean currCompleted, @NonNull Boolean nextCompleted, Date assignDate, Date currIterDate, @NonNull RepeatType repeatType, FocusType focusType) {
         this.name = name;
         this.currCompleted = currCompleted;
         this.nextCompleted = nextCompleted;

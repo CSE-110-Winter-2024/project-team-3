@@ -4,6 +4,7 @@ import androidx.room.TypeConverter;
 
 import java.util.Date;
 
+import edu.ucsd.cse110.successorator.lib.domain.FocusType;
 import edu.ucsd.cse110.successorator.lib.domain.RecurringType;
 import edu.ucsd.cse110.successorator.lib.domain.RecurringTypeFactory;
 import edu.ucsd.cse110.successorator.lib.domain.RepeatType;
@@ -25,5 +26,14 @@ public class Converter {
     @TypeConverter
     public static RepeatType stringToRecurringType(String repeatTypeString) {
         return RepeatType.valueOf(repeatTypeString);
+    }
+
+
+    @TypeConverter
+    public static String focusTypeToString(FocusType focusType) { return focusType.name(); }
+
+    @TypeConverter
+    public static FocusType stringToFocusType(String focusTypeString) {
+        return FocusType.valueOf(focusTypeString);
     }
 }

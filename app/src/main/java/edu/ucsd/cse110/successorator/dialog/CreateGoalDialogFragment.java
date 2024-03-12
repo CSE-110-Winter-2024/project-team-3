@@ -19,6 +19,7 @@ import java.util.Date;
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentDialogCreateGoalBinding;
+import edu.ucsd.cse110.successorator.lib.domain.FocusType;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 import edu.ucsd.cse110.successorator.lib.domain.RecurringOneTime;
 import edu.ucsd.cse110.successorator.lib.domain.RepeatType;
@@ -117,7 +118,7 @@ public class CreateGoalDialogFragment extends DialogFragment {
         RadioButton selectedRecurringRb = view.RecurringOptions.findViewById(view.RecurringOptions.getCheckedRadioButtonId());
         String selectedRecurringString = selectedRecurringRb.getTag().toString();
 
-        var goal = new Goal(front, null, false, false, date, date, RepeatType.valueOf(selectedRecurringString), selectedFocusString);
+        var goal = new Goal(front, null, false, false, date, date, RepeatType.valueOf(selectedRecurringString), FocusType.valueOf(selectedFocusString));
 
         activityModel.putGoal(goal);
 

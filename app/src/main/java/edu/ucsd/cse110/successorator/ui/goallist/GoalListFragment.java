@@ -99,9 +99,13 @@ public class GoalListFragment extends Fragment {
             }
 
             completedGoals = completedGoals.stream()
-                    .sorted(Comparator.comparing(Goal::getAssignDate)).collect(Collectors.toList());
+                    .sorted(Comparator.comparing(Goal::getAssignDate))
+                    .sorted(Comparator.comparing(Goal::get_focus))
+                    .collect(Collectors.toList());
             nonCompletedGoals = nonCompletedGoals.stream()
-                    .sorted(Comparator.comparing(Goal::getAssignDate)).collect(Collectors.toList());
+                    .sorted(Comparator.comparing(Goal::getAssignDate))
+                    .sorted(Comparator.comparing(Goal::get_focus))
+                    .collect(Collectors.toList());
 
 
             ArrayList<Goal> newOrderedGoals = new ArrayList<>();

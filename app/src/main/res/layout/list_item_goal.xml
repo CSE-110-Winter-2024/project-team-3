@@ -6,6 +6,25 @@
     android:layout_height="96dp">
 
     <TextView
+        android:id="@+id/focusTypeLabel"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+
+        android:layout_marginStart="16dp"
+        android:background="@drawable/ic_filled_circle"
+        android:backgroundTint="@color/H_color"
+        android:button="@null"
+        android:buttonTint="@color/black"
+        android:checked="true"
+        android:gravity="center"
+        android:text="@string/h"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/goal_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/goal_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -15,7 +34,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/focusTypeLabel"
         app:layout_constraintTop_toTopOf="parent" />
 
     <CheckBox

@@ -46,6 +46,7 @@
             android:button="@null"
             android:buttonTint="@color/black"
             android:gravity="center"
+            android:checked="true"
             android:tag="HOME"
             android:text="@string/h" />
 
@@ -80,7 +81,6 @@
             android:backgroundTint="#DDDDDD"
             android:button="@null"
             android:buttonTint="@color/black"
-            android:checked="true"
             android:gravity="center"
             android:tag="ERRANDS"
             android:text="@string/e" />

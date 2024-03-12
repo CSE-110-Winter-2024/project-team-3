@@ -12,12 +12,12 @@ public class Goal {
     private final @NonNull Boolean nextCompleted;
     private final Date assignDate;
     private final Date currIterDate;
-    public final @NonNull String focus;
+    public final @NonNull FocusType focus;
     public final @NonNull RecurringType recurringType;
 
     public Goal(@NonNull String name, @NonNull Integer id, @NonNull Boolean currCompleted,
                 @NonNull Boolean nextCompleted, Date assignDate, Date currIterDate,
-                @NonNull RepeatType repeatType, @NonNull String focus) {
+                @NonNull RepeatType repeatType, @NonNull FocusType focus) {
         this.name = name;
         this.id = id;
         this.currCompleted = currCompleted;
@@ -65,7 +65,7 @@ public class Goal {
 
 
     @NonNull
-    public String get_focus(){return this.focus;}
+    public FocusType get_focus(){return this.focus;}
 
     @NonNull
     public Goal withId(int id) {

@@ -41,7 +41,7 @@
             android:layout_height="match_parent">
 
             <RadioButton
-                android:id="@+id/H_button"
+                android:id="@+id/focusTypeLabel"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginStart="30dp"
@@ -72,7 +72,7 @@
                 android:text="@string/w"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/S_button"
-                app:layout_constraintStart_toEndOf="@+id/H_button"
+                app:layout_constraintStart_toEndOf="@+id/focusTypeLabel"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <RadioButton

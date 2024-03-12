@@ -170,7 +170,7 @@ public class MainViewModel extends ViewModel {
         List<Goal> todayGoals = new ArrayList<>();
         List<Goal> tmrGoals = new ArrayList<>();
 
-        Goal modifiedGoal;
+        Goal modifiedGoal = null;
         for (var goal : allGoalsTemp) {
             /**
              * IMPORTANT:: tomorrow check must come first, this is because today's recurring task
@@ -180,35 +180,28 @@ public class MainViewModel extends ViewModel {
              * We want the roll-over to override whatever logic in finishing a task early
               */
 
-            // today: need to advance currIterDate if completed
-            if (goal.ifDateMatchesRecurring(todayDateTemp)) {
-                if (goal.getCurrCompleted()) {
-                    modifiedGoal = goal.withCurrIterDate(goal.calculateNextRecurring(todayDateTemp));
-                    modifiedGoal = modifiedGoal.withCurrComplete(false);
-                    goalRepository.save(modifiedGoal);
-                }
-            }
-
             // tomorrow: need to "delete" completed goals & advance currIterDate
             if (goal.ifDateMatchesRecurring(todayDateTemp.nextDay())) {
                 if (goal.getNextCompleted()) {
                     modifiedGoal = goal.withCurrIterDate(goal.calculateNextRecurring(todayDateTemp.nextDay()));
                     modifiedGoal = modifiedGoal.withNextComplete(false);
-                    goalRepository.save(modifiedGoal);
                 }
             }
 
-//            // today: need to roll over to tmr if not completed
-//            if (goal.ifDateMatchesRecurring(todayDateTemp)) {
-//                if (goal.getCurrCompleted()) {
-//                    modifiedGoal = goal.withCurrIterDate(goal.calculateNextRecurring(todayDateTemp));
-//                    modifiedGoal = modifiedGoal.withCurrComplete(false);
-//                    goalRepository.save(modifiedGoal);
-//                }
-//            }
+            // today: need to advance currIterDate if completed
+            if (goal.ifDateMatchesRecurring(todayDateTemp)) {
+                if (goal.getCurrCompleted()) {
+                    modifiedGoal = goal.withCurrIterDate(goal.calculateNextRecurring(todayDateTemp));
+                    modifiedGoal = modifiedGoal.withCurrComplete(false);
+                } else {
+                    modifiedGoal = goal.withCurrIterDate(todayDateTemp.toJavaDate());
+                }
+            }
+
+            if (modifiedGoal != null) {
+                goalRepository.save(modifiedGoal);
+            }
         }
-
-
 
         todayDate.setValue(todayDate.getValue().nextDay());
     }
