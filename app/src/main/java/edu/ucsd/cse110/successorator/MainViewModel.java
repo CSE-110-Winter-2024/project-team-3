@@ -278,4 +278,8 @@ public class MainViewModel extends ViewModel {
     public void deleteGoal(Integer id) {
         goalRepository.remove(id);
     }
+
+    public Subject<FocusType> getFocusType() {
+        return focus;
+    }
 }

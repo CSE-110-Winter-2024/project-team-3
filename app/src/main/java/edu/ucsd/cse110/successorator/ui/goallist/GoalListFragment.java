@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -139,6 +140,28 @@ public class GoalListFragment extends Fragment {
             showFocusTypeMenu();
         });
 
+        var context = getContext();
+        assert context != null;
+        view.focusMenuButton.setBackgroundTintList( ContextCompat.getColorStateList(context, R.color.All_color));
+        activityModel.getFocusType().observe(focusType -> {
+            switch (Objects.requireNonNull(focusType)) {
+                case HOME:
+                    view.focusMenuButton.setBackgroundTintList( ContextCompat.getColorStateList(context, R.color.H_color));
+                    break;
+                case WORK:
+                    view.focusMenuButton.setBackgroundTintList( ContextCompat.getColorStateList(context, R.color.W_color));
+                    break;
+                case ERRANDS:
+                    view.focusMenuButton.setBackgroundTintList( ContextCompat.getColorStateList(context, R.color.E_color));
+                    break;
+                case SCHOOL:
+                    view.focusMenuButton.setBackgroundTintList( ContextCompat.getColorStateList(context, R.color.S_color));
+                    break;
+                case ALL:
+                    view.focusMenuButton.setBackgroundTintList( ContextCompat.getColorStateList(context, R.color.All_color));
+                    break;
+            }
+        });
 
         activityModel.getDisplayGoals().observe(goals -> {
             if (goals == null) return;

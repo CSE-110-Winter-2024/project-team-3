@@ -14,4 +14,6 @@
     <color name="S_color">#EFCAFF</color>
     <color name="E_color">#DFEED4</color>
     <color name="unselected_color">#DDDDDD</color>
+    <color name="All_color">#D5D6D6</color>
+
 </resources>
