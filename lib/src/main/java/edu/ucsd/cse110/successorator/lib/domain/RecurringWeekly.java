@@ -34,8 +34,7 @@ public class RecurringWeekly implements RecurringType{
 
     @Override
     public String getDescription(Date startDate) {
-        int weekInt = getWeekInt(startDate);
-        return "Weekly on "+ DayOfWeek.of(weekInt).toString();
+        return getStaticDescription(SuccessDate.fromJavaDate(startDate));
     }
 
     @Override

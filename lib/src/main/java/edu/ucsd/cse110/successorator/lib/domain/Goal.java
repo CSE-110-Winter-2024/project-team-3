@@ -98,6 +98,8 @@ public class Goal {
     }
 
     public boolean ifDateMatchesRecurring_NoRollOver(SuccessDate checkDate) {
+        if (assignDate == null) return false;
+
         if ( currIterDate != null ) {
             int deltaDays = SuccessDate.fromJavaDate(currIterDate).toJavaDate().compareTo(checkDate.toJavaDate());
             if (deltaDays > 0) {

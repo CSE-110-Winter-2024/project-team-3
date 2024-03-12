@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import edu.ucsd.cse110.successorator.DisplayGoalType;
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.ListItemGoalBinding;
@@ -61,21 +62,8 @@ public class GoalListAdapter extends ArrayAdapter<Goal> {
 
         // Populate the view with the flashcard's data.
         binding.goalTitle.setText(goal.getName());
-        switch (goal.get_focus()) {
-            case HOME:
-                binding.focusTypeLabel.setBackgroundTintList( ContextCompat.getColorStateList(getContext(), R.color.H_color));
-                break;
-            case WORK:
-                binding.focusTypeLabel.setBackgroundTintList( ContextCompat.getColorStateList(getContext(), R.color.W_color));
-                break;
-            case ERRANDS:
-                binding.focusTypeLabel.setBackgroundTintList( ContextCompat.getColorStateList(getContext(), R.color.E_color));
-                break;
-            case SCHOOL:
-                binding.focusTypeLabel.setBackgroundTintList( ContextCompat.getColorStateList(getContext(), R.color.S_color));
-                break;
-        }
-        binding.focusTypeLabel.setText(goal.get_focus().name().substring(0, 1));
+        binding.goalReccuringText.setText(goal.getDescription());
+        addFocusColor(goal, binding);
 
         boolean ifChecked = false;
         switch (Objects.requireNonNull(activityModel.getDisplayGoalType().getValue())) {
@@ -92,30 +80,38 @@ public class GoalListAdapter extends ArrayAdapter<Goal> {
         if (ifChecked) {
             binding.goalCheckBox.setChecked(true);
             binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            binding.goalReccuringText.setPaintFlags(binding.goalReccuringText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            binding.focusTypeLabel.setBackgroundTintList( ContextCompat.getColorStateList(getContext(), R.color.unselected_color));
         } else {
             binding.goalCheckBox.setChecked(false);
             binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            binding.goalReccuringText.setPaintFlags(binding.goalReccuringText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            addFocusColor(goal, binding);
         }
 
-            switch (Objects.requireNonNull(activityModel.getDisplayGoalType().getValue())) {
-                case TODAY:
-                case TOMORROW:
-                    binding.getRoot().setOnClickListener(v -> {
-                        if (binding.goalCheckBox.isChecked()) {
-                            binding.goalCheckBox.setChecked(false);
-                            binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                            activityModel.setNonCompleted(goal.getId());
-                        } else {
-                            binding.goalCheckBox.setChecked(true);
-                            binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                            activityModel.setCompleted(goal.getId());
-                        }
-                    });
-                    break;
-                case PENDING:
-                case RECURRING:
-                    break;
-            };
+        switch (Objects.requireNonNull(activityModel.getDisplayGoalType().getValue())) {
+            case TODAY:
+            case TOMORROW:
+                binding.getRoot().setOnClickListener(v -> {
+                    if (binding.goalCheckBox.isChecked()) {
+                        binding.goalCheckBox.setChecked(false);
+                        binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                        binding.goalReccuringText.setPaintFlags(binding.goalReccuringText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                        activityModel.setNonCompleted(goal.getId());
+                        addFocusColor(goal, binding);
+                    } else {
+                        binding.goalCheckBox.setChecked(true);
+                        binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        binding.goalReccuringText.setPaintFlags(binding.goalReccuringText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        activityModel.setCompleted(goal.getId());
+                        binding.focusTypeLabel.setBackgroundTintList( ContextCompat.getColorStateList(getContext(), R.color.unselected_color));
+                    }
+                });
+                break;
+            case PENDING:
+            case RECURRING:
+                break;
+        };
 
         binding.getRoot().setOnLongClickListener(v -> {
             switch (Objects.requireNonNull(activityModel.getDisplayGoalType().getValue())) {
@@ -134,6 +130,24 @@ public class GoalListAdapter extends ArrayAdapter<Goal> {
         });
 
         return binding.getRoot();
+    }
+
+    private void addFocusColor(Goal goal, ListItemGoalBinding binding) {
+        switch (goal.get_focus()) {
+            case HOME:
+                binding.focusTypeLabel.setBackgroundTintList( ContextCompat.getColorStateList(getContext(), R.color.H_color));
+                break;
+            case WORK:
+                binding.focusTypeLabel.setBackgroundTintList( ContextCompat.getColorStateList(getContext(), R.color.W_color));
+                break;
+            case ERRANDS:
+                binding.focusTypeLabel.setBackgroundTintList( ContextCompat.getColorStateList(getContext(), R.color.E_color));
+                break;
+            case SCHOOL:
+                binding.focusTypeLabel.setBackgroundTintList( ContextCompat.getColorStateList(getContext(), R.color.S_color));
+                break;
+        }
+        binding.focusTypeLabel.setText(goal.get_focus().name().substring(0, 1));
     }
 
     private void showMoveGoalMenu(ListItemGoalBinding binding, Goal goal, boolean showMoveGoal, boolean showFinishGoal) {
@@ -162,6 +176,10 @@ public class GoalListAdapter extends ArrayAdapter<Goal> {
                         break;
                     case "Finish":
                         activityModel.setCompleted(goal.getId());
+
+                        if (activityModel.getDisplayGoalType().getValue() == DisplayGoalType.PENDING) {
+                            activityModel.moveGoalToToday(goal);
+                        }
                         break;
                     case "Delete":
                         activityModel.deleteGoal(goal.getId());

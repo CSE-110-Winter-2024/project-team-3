@@ -122,6 +122,9 @@ public class GoalListFragment extends Fragment {
 
         activityModel.getTopDateString().observe(newTopDateString -> {
             view.dateText.setText(newTopDateString);
+            int indexTo = newTopDateString.length();
+            if (newTopDateString.indexOf(' ') > 0) indexTo = newTopDateString.indexOf(' ');
+            view.noGoalsText.setText("No goals for " + newTopDateString.substring(0,indexTo) + ". Click the + at the upper right to enter your Most Important Thing");
         });
 
         view.addTaskButton.setOnClickListener(v -> {
@@ -175,7 +178,9 @@ public class GoalListFragment extends Fragment {
             List<Goal> nonCompletedGoals = new ArrayList<>();
             List<Goal> completedGoals = new ArrayList<>();
 
+            boolean anyNull = false;
             for (var goal : goals) {
+                if (goal.getAssignDate() == null) anyNull = true;
                 if (goal.getCurrCompleted()) {
                     completedGoals.add(goal);
                 } else {
@@ -183,14 +188,26 @@ public class GoalListFragment extends Fragment {
                 }
             }
 
-            completedGoals = completedGoals.stream()
-                    .sorted(Comparator.comparing(Goal::getAssignDate))
-                    .sorted(Comparator.comparing(Goal::get_focus))
-                    .collect(Collectors.toList());
-            nonCompletedGoals = nonCompletedGoals.stream()
-                    .sorted(Comparator.comparing(Goal::getAssignDate))
-                    .sorted(Comparator.comparing(Goal::get_focus))
-                    .collect(Collectors.toList());
+            if ((activityModel.getDisplayGoalType().getValue() != DisplayGoalType.PENDING)
+                && (!anyNull)) {
+                completedGoals = completedGoals.stream()
+                        .sorted(Comparator.comparing(Goal::getAssignDate))
+                        .sorted(Comparator.comparing(Goal::get_focus))
+                        .collect(Collectors.toList());
+                nonCompletedGoals = nonCompletedGoals.stream()
+                        .sorted(Comparator.comparing(Goal::getAssignDate))
+                        .sorted(Comparator.comparing(Goal::get_focus))
+                        .collect(Collectors.toList());
+            } else {
+                completedGoals = completedGoals.stream()
+                        .sorted(Comparator.comparing(Goal::getId))
+                        .sorted(Comparator.comparing(Goal::get_focus))
+                        .collect(Collectors.toList());
+                nonCompletedGoals = nonCompletedGoals.stream()
+                        .sorted(Comparator.comparing(Goal::getId))
+                        .sorted(Comparator.comparing(Goal::get_focus))
+                        .collect(Collectors.toList());
+            }
 
 
             ArrayList<Goal> newOrderedGoals = new ArrayList<>();

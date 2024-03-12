@@ -267,11 +267,15 @@ public class MainViewModel extends ViewModel {
     }
 
     public void moveGoalToToday(Goal goal) {
-        Goal updateGoal = goal.withAssignDate(Objects.requireNonNull(todayDate.getValue()).toJavaDate());
+        Date setToDate = Objects.requireNonNull(todayDate.getValue()).toJavaDate();
+        Goal updateGoal = goal.withAssignDate(setToDate)
+                            .withCurrIterDate(setToDate);
         goalRepository.save(updateGoal);
     }
     public void moveGoalToTomorrow(Goal goal) {
-        Goal updateGoal = goal.withAssignDate(Objects.requireNonNull(todayDate.getValue()).nextDay().toJavaDate());
+        Date setToDate = Objects.requireNonNull(todayDate.getValue()).nextDay().toJavaDate();
+        Goal updateGoal = goal.withAssignDate(setToDate)
+                .withCurrIterDate(setToDate);
         goalRepository.save(updateGoal);
     }
 

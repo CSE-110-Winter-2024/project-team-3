@@ -31,7 +31,7 @@ public class RecurringYearly implements RecurringType{
 
     @Override
     public String getDescription(Date startDate) {
-        return "Yearly starting on "+ startDate.toString();
+        return getStaticDescription(SuccessDate.fromJavaDate(startDate));
     }
 
     @Override

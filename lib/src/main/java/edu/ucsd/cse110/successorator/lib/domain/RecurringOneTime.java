@@ -16,11 +16,7 @@ public class RecurringOneTime implements RecurringType{
 
     @Override
     public String getDescription(Date startDate) {
-        if (startDate == null) {
-            return "Pending";
-        } else {
-            return "One-time on "+ startDate.toString();
-        }
+        return "";
     }
 
     @Override

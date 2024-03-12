@@ -29,7 +29,7 @@ public class RecurringMonthly implements RecurringType{
 
     @Override
     public String getDescription(Date startDate) {
-        return "Monthly starting on "+ startDate.toString();
+        return getStaticDescription(SuccessDate.fromJavaDate(startDate));
     }
 
     @Override

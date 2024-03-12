@@ -24,7 +24,7 @@ public class RecurringDaily implements RecurringType {
 
     @Override
     public String getDescription(Date startDate) {
-        return "Daily starting on " + startDate.toString();
+        return getStaticDescription(SuccessDate.fromJavaDate(startDate));
     }
 
     @Override
