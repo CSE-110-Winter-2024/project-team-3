@@ -1,7 +1,5 @@
 package edu.ucsd.cse110.successorator.lib.domain;
 
-import java.time.DayOfWeek;
-import java.util.ArrayList;
 import java.util.Date;
 
 public interface RecurringType {
@@ -14,7 +12,7 @@ public interface RecurringType {
      "do hw".ifDateMatchesRecurring(3/4/2024) -> false
      "do hw".ifDateMatchesRecurring(10/3/2024) -> true
      */
-    public boolean ifDateMatchesRecurring(SuccessDate startDate, SuccessDate checkDate);
+    public boolean ifDateMatchesRecurring(SuccessDate startDate, SuccessDate currIterDate, SuccessDate checkDate);
 
     public String getDescription(Date startDate);
 }

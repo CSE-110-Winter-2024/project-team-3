@@ -1,7 +1,5 @@
 package edu.ucsd.cse110.successorator.lib.domain;
 
-import java.time.DayOfWeek;
-import java.util.Calendar;
 import java.util.Date;
 
 public class RecurringYearly implements RecurringType{
@@ -18,10 +16,10 @@ public class RecurringYearly implements RecurringType{
 
 
     @Override
-    public boolean ifDateMatchesRecurring(SuccessDate startDate, SuccessDate checkDate) {
-        if(startDate.toJavaDate().compareTo(checkDate.toJavaDate()) <= 0){
-            if(startDate.getMonth() == checkDate.getMonth()) {
-                if(startDate.getDay() == checkDate.getDay()){
+    public boolean ifDateMatchesRecurring(SuccessDate startDate, SuccessDate currIterDate, SuccessDate checkDate) {
+        if(startDate.toJavaDate().compareTo(currIterDate.toJavaDate()) <= 0){
+            if(startDate.getMonth() == currIterDate.getMonth()) {
+                if(startDate.getDay() == currIterDate.getDay()){
                     return true;
                 }
             }

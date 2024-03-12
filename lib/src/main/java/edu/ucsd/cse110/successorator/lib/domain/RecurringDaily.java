@@ -1,6 +1,5 @@
 package edu.ucsd.cse110.successorator.lib.domain;
 
-import java.util.Calendar;
 import java.util.Date;
 
 public class RecurringDaily implements RecurringType {
@@ -16,8 +15,8 @@ public class RecurringDaily implements RecurringType {
     }
 
     @Override
-    public boolean ifDateMatchesRecurring(SuccessDate startDate, SuccessDate checkDate) {
-        if(startDate.toJavaDate().compareTo(checkDate.toJavaDate())  > 0){
+    public boolean ifDateMatchesRecurring(SuccessDate startDate, SuccessDate currIterDate, SuccessDate checkDate) {
+        if(startDate.toJavaDate().compareTo(currIterDate.toJavaDate())  > 0){
             return false;
         }
         return true;

@@ -1,7 +1,5 @@
 package edu.ucsd.cse110.successorator.lib.domain;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 
 public class RecurringOneTime implements RecurringType{
@@ -12,8 +10,8 @@ public class RecurringOneTime implements RecurringType{
     }
 
     @Override
-    public boolean ifDateMatchesRecurring(SuccessDate startDate, SuccessDate checkDate) {
-        return startDate.equals(checkDate);
+    public boolean ifDateMatchesRecurring(SuccessDate startDate, SuccessDate currIterDate, SuccessDate checkDate) {
+        return startDate.equals(currIterDate);
     }
 
     @Override
