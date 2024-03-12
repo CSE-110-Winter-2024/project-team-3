@@ -81,6 +81,8 @@ public class Goal {
      "do hw".ifDateMatchesRecurring(10/3/2024) -> true
      */
     public boolean ifDateMatchesRecurring(SuccessDate checkDate) {
+        if (assignDate == null) return false;
+
         if ( currIterDate != null ) {
             int deltaDays = SuccessDate.fromJavaDate(currIterDate).toJavaDate().compareTo(checkDate.toJavaDate());
             if (deltaDays > 0) {

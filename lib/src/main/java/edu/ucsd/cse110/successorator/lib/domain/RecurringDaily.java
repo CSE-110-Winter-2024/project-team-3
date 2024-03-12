@@ -29,7 +29,12 @@ public class RecurringDaily implements RecurringType {
 
     @Override
     public Date calculateNextRecurring(SuccessDate startDate, SuccessDate todayDateTemp) {
-        return startDate.nextDay().toJavaDate();
+        return todayDateTemp.nextDay().toJavaDate();
+    }
+
+
+    public static String getStaticDescription(SuccessDate startDate) {
+        return "daily";
     }
 }
 

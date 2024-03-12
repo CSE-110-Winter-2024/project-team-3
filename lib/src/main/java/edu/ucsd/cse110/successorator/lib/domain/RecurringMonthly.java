@@ -41,4 +41,15 @@ public class RecurringMonthly implements RecurringType{
 
         return Date.from(tempDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
+
+    public static String getStaticDescription(SuccessDate startDate) {
+        LocalDate startLocalDate = startDate.toLocalDate();
+        LocalDate tempLocalDate = startDate.toLocalDate();
+        int numberOccuranceOfWeek = 0;
+        while (startLocalDate.getMonth().getValue() == tempLocalDate.getMonth().getValue()) {
+            tempLocalDate = tempLocalDate.plusWeeks(-1);
+            numberOccuranceOfWeek++;
+        }
+        return "monthly on every " + numberOccuranceOfWeek + "th " + startDate.getDayOfWeekString();
+    }
 }

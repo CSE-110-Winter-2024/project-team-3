@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,8 +77,19 @@ public class GoalListAdapter extends ArrayAdapter<Goal> {
         }
         binding.focusTypeLabel.setText(goal.get_focus().name().substring(0, 1));
 
-
-        if (goal.getCurrCompleted()) {
+        boolean ifChecked = false;
+        switch (Objects.requireNonNull(activityModel.getDisplayGoalType().getValue())) {
+            case TODAY:
+                ifChecked = goal.getCurrCompleted();
+                break;
+            case TOMORROW:
+                ifChecked = goal.getNextCompleted();
+                break;
+            default:
+                ifChecked = false;
+                break;
+        }
+        if (ifChecked) {
             binding.goalCheckBox.setChecked(true);
             binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         } else {
@@ -85,34 +97,37 @@ public class GoalListAdapter extends ArrayAdapter<Goal> {
             binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
 
-        binding.getRoot().setOnClickListener(v -> {
             switch (Objects.requireNonNull(activityModel.getDisplayGoalType().getValue())) {
                 case TODAY:
                 case TOMORROW:
-                    if (binding.goalCheckBox.isChecked()) {
-                        binding.goalCheckBox.setChecked(false);
-                        binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                        activityModel.setNonCompleted(goal.getId());
-                    } else {
-                        binding.goalCheckBox.setChecked(true);
-                        binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                        activityModel.setCompleted(goal.getId());
-                    }
+                    binding.getRoot().setOnClickListener(v -> {
+                        if (binding.goalCheckBox.isChecked()) {
+                            binding.goalCheckBox.setChecked(false);
+                            binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                            activityModel.setNonCompleted(goal.getId());
+                        } else {
+                            binding.goalCheckBox.setChecked(true);
+                            binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                            activityModel.setCompleted(goal.getId());
+                        }
+                    });
                     break;
                 case PENDING:
                 case RECURRING:
                     break;
             };
-        });
 
         binding.getRoot().setOnLongClickListener(v -> {
             switch (Objects.requireNonNull(activityModel.getDisplayGoalType().getValue())) {
                 case TODAY:
                 case TOMORROW:
+                    showMoveGoalMenu(binding, goal, false, true);
+                    break;
                 case RECURRING:
+                    showMoveGoalMenu(binding, goal, false, false);
                     break;
                 case PENDING:
-                    showMoveGoalMenu(binding, goal);
+                    showMoveGoalMenu(binding, goal, true, true);
                     break;
             }
             return true;
@@ -121,12 +136,20 @@ public class GoalListAdapter extends ArrayAdapter<Goal> {
         return binding.getRoot();
     }
 
-    private void showMoveGoalMenu(ListItemGoalBinding binding, Goal goal) {
+    private void showMoveGoalMenu(ListItemGoalBinding binding, Goal goal, boolean showMoveGoal, boolean showFinishGoal) {
         // Initializing the popup menu and giving the reference as current context
         PopupMenu popupMenu = new PopupMenu(getContext(), binding.goalTitle);
 
         // Inflating popup menu from popup_menu.xml file
-        popupMenu.getMenuInflater().inflate(R.menu.move_goal_popup_menu, popupMenu.getMenu());
+        Menu view = popupMenu.getMenu();
+        popupMenu.getMenuInflater().inflate(R.menu.move_goal_popup_menu, view);
+        if (!showMoveGoal) {
+            view.getItem(0).setVisible(false);
+            view.getItem(1).setVisible(false);
+        }
+        if (!showFinishGoal) {
+            view.getItem(2).setVisible(false);
+        }
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {

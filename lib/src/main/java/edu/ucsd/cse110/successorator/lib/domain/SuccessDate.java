@@ -76,4 +76,18 @@ public class SuccessDate {
         date = date.plusDays(1);
         return new SuccessDate(date.getYear(), date.getMonth().getValue(), date.getDayOfMonth());
     }
+
+    public LocalDate toLocalDate() {
+        return LocalDate.of(year, month, day);
+    }
+
+
+    public static SuccessDate fromLocalDate(LocalDate localDate) {
+        return new SuccessDate(localDate.getYear(), localDate.getMonth().getValue(), localDate.getDayOfMonth());
+    }
+
+    public String getMonthString() {
+        LocalDate date = LocalDate.of(year, month, day);
+        return date.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault());
+    }
 }

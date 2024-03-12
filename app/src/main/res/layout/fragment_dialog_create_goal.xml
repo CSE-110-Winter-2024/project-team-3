@@ -120,16 +120,16 @@
         app:layout_constraintTop_toBottomOf="@+id/focus_options">
 
         <RadioButton
-            android:id="@+id/one_time_button"
+            android:id="@+id/one_time_option"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:checked="true"
             android:tag="ONE_TIME"
-            android:text="@string/one_time" />
+            android:text="one-time" />
 
         <RadioButton
-            android:id="@+id/daily_button"
+            android:id="@+id/daily_option"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -137,7 +137,7 @@
             android:text="@string/daily" />
 
         <RadioButton
-            android:id="@+id/weekly_button"
+            android:id="@+id/weekly_option"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -145,20 +145,55 @@
             android:text="@string/weekly" />
 
         <RadioButton
-            android:id="@+id/monthlyButton"
+            android:id="@+id/monthly_option"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:tag="MONTHLY"
             android:text="@string/monthly" />
 
         <RadioButton
-            android:id="@+id/yearlyButton"
+            android:id="@+id/yearly_option"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:tag="YEARLY"
             android:text="@string/yearly" />
 
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/datePickerWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/assignDatePicker"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:hint="click to choose start Date"
+                android:longClickable="false"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Date to start recurring: "
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/assignDatePicker"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

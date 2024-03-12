@@ -42,4 +42,8 @@ public class RecurringYearly implements RecurringType{
         }
         return Date.from(tempDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
+
+    public static String getStaticDescription(SuccessDate startDate) {
+        return "yearly on " + startDate.getMonthString().substring(0,3) + " " + startDate.getDay();
+    }
 }

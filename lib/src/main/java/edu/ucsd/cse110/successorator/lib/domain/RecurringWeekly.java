@@ -46,4 +46,8 @@ public class RecurringWeekly implements RecurringType{
         }
         return Date.from(tempDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
+
+    public static String getStaticDescription(SuccessDate startDate) {
+        return "weekly on " + startDate.getDayOfWeekString().substring(0, 3);
+    }
 }

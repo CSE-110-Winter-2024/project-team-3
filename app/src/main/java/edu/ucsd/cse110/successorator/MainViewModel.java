@@ -187,6 +187,11 @@ public class MainViewModel extends ViewModel {
                 if (goal.getCurrCompleted()) {
                     modifiedGoal = goal.withCurrIterDate(goal.calculateNextRecurring(todayDateTemp));
                     modifiedGoal = modifiedGoal.withCurrComplete(false);
+
+                    if (goal.getNextCompleted()) {
+                        modifiedGoal = goal.withCurrIterDate(goal.calculateNextRecurring(todayDateTemp.nextDay()));
+                        modifiedGoal = modifiedGoal.withNextComplete(false);
+                    }
                 } else {
                     modifiedGoal = goal.withCurrIterDate(todayDateTemp.toJavaDate());
                 }
