@@ -178,7 +178,7 @@ public class GoalListAdapter extends ArrayAdapter<Goal> {
                         activityModel.setCompleted(goal.getId());
 
                         if (activityModel.getDisplayGoalType().getValue() == DisplayGoalType.PENDING) {
-                            activityModel.moveGoalToToday(goal);
+                            activityModel.moveGoalToToday(goal.withCurrComplete(true));
                         }
                         break;
                     case "Delete":
