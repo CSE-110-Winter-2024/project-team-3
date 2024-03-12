@@ -1,6 +1,7 @@
 package edu.ucsd.cse110.successorator.ui.goallist;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,27 +55,23 @@ public class GoalListAdapter extends ArrayAdapter<Goal> {
         binding.goalTitle.setText(goal.getName());
 
 
-        if (goal.isCompleted()) {
+        if (goal.getCurrCompleted()) {
             binding.goalCheckBox.setChecked(true);
+            binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         } else {
             binding.goalCheckBox.setChecked(false);
+            binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
-
-        binding.goalCheckBox.setOnClickListener(v -> {
-            if (binding.goalCheckBox.isChecked()) {
-                activityModel.setCompleted(goal.getId());
-            } else {
-                activityModel.setNonCompleted(goal.getId());
-            }
-        });
 
         binding.getRoot().setOnClickListener(v -> {
             Log.i("GoalListAdapter", "Goal item is clicked");
             if (binding.goalCheckBox.isChecked()) {
                 binding.goalCheckBox.setChecked(false);
+                binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 activityModel.setNonCompleted(goal.getId());
             } else {
                 binding.goalCheckBox.setChecked(true);
+                binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 activityModel.setCompleted(goal.getId());
             }
         });

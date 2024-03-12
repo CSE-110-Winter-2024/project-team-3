@@ -26,5 +26,10 @@ public interface GoalRepository {
 
 
     void setCompleted(int id);
+
+    void setNextCompleted(int id);
+
+    void setNextNonCompleted(int id);
+
     void setNonCompleted(int id);
 }

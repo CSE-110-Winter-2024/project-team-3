@@ -1,13 +1,10 @@
 package edu.ucsd.cse110.successorator.lib.data;
 
-import java.time.Instant;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
-import edu.ucsd.cse110.successorator.lib.domain.RecurringWeekly;
 import edu.ucsd.cse110.successorator.lib.util.SimpleSubject;
 import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
 
@@ -54,7 +51,7 @@ public class InMemoryGoalSource {
 
     // completeGoal
     public void completeGoal(int id) {
-        Goal modifiedGoal = getGoal(id).withComplete(true);
+        Goal modifiedGoal = getGoal(id).withCurrComplete(true);
         Goals.put(modifiedGoal.getId(), modifiedGoal);
         if (GoalSubjects.containsKey(modifiedGoal.getId())) {
             GoalSubjects.get(modifiedGoal.getId()).setValue(modifiedGoal);
@@ -65,7 +62,7 @@ public class InMemoryGoalSource {
 
     // completeGoal
     public void unCompleteGoal(int id) {
-        Goal modifiedGoal = getGoal(id).withComplete(false);
+        Goal modifiedGoal = getGoal(id).withCurrComplete(false);
         Goals.put(modifiedGoal.getId(), modifiedGoal);
         if (GoalSubjects.containsKey(modifiedGoal.getId())) {
             GoalSubjects.get(modifiedGoal.getId()).setValue(modifiedGoal);

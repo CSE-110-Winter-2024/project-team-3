@@ -12,8 +12,10 @@ public interface RecurringType {
      "do hw".ifDateMatchesRecurring(3/4/2024) -> false
      "do hw".ifDateMatchesRecurring(10/3/2024) -> true
      */
-    public boolean ifDateMatchesRecurring(SuccessDate startDate, SuccessDate currIterDate, SuccessDate checkDate);
+    public boolean ifDateMatchesRecurring(SuccessDate startDate, SuccessDate checkDate);
 
     public String getDescription(Date startDate);
+
+    public Date calculateNextRecurring(SuccessDate startDate, SuccessDate todayDateTemp);
 }
 

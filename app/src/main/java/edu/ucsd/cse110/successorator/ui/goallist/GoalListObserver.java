@@ -36,7 +36,7 @@ public class GoalListObserver implements Observer<List<Goal>> {
         List<Goal> completedGoals = new ArrayList<>();
 
         for (var goal : goals) {
-            if (goal.isCompleted()) {
+            if (goal.getCurrCompleted()) {
                 completedGoals.add(goal);
             } else {
                 nonCompletedGoals.add(goal);

@@ -117,7 +117,7 @@ public class CreateGoalDialogFragment extends DialogFragment {
         RadioButton selectedRecurringRb = view.RecurringOptions.findViewById(view.RecurringOptions.getCheckedRadioButtonId());
         String selectedRecurringString = selectedRecurringRb.getTag().toString();
 
-        var goal = new Goal(front, null, false, date, date, RepeatType.valueOf(selectedRecurringString), selectedFocusString);
+        var goal = new Goal(front, null, false, false, date, date, RepeatType.valueOf(selectedRecurringString), selectedFocusString);
 
         activityModel.putGoal(goal);
 

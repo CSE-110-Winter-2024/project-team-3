@@ -7,10 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
-import java.util.Date;
 import java.util.List;
-
-import edu.ucsd.cse110.successorator.lib.domain.SuccessDate;
 
 @Dao
 public interface GoalDao {
@@ -46,7 +43,7 @@ public interface GoalDao {
 
     @Transaction
     default int append(GoalEntity goal) {
-        var newGoal = new GoalEntity(goal.name, goal.completed, goal.assignDate, goal.currDate, goal.repeatType, goal.focusType);
+        var newGoal = new GoalEntity(goal.name, goal.currCompleted, goal.nextCompleted, goal.assignDate, goal.currIterDate, goal.repeatType, goal.focusType);
 
         return Math.toIntExact((Long) insert(newGoal));
     }
@@ -54,10 +51,14 @@ public interface GoalDao {
     @Query("DELETE FROM Goal WHERE id = :id")
     void delete(int id);
 
-    @Query("UPDATE Goal SET completed = false WHERE id = :id;")
-    void setNonCompleted(int id);
+    @Query("UPDATE Goal SET currCompleted = false WHERE id = :id;")
+    void setCurrNonCompleted(int id);
 
-    @Query("UPDATE Goal SET completed = true WHERE id = :id;")
-    void setCompleted(int id);
+    @Query("UPDATE Goal SET currCompleted = true WHERE id = :id;")
+    void setCurrCompleted(int id);
 
+    @Query("UPDATE Goal SET nextCompleted = true WHERE id = :id;")
+    void setNextCompleted(int id);
+    @Query("UPDATE Goal SET nextCompleted = false WHERE id = :id;")
+    void setNextNonCompleted(int id);
 }

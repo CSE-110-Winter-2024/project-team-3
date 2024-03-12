@@ -2,6 +2,8 @@ package edu.ucsd.cse110.successorator;
 
 import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
@@ -56,12 +58,23 @@ public class MainViewModel extends ViewModel {
 
         this.todayDate.observe(successDate -> {
             updateGoalLists();
+            updateTopDateString();
         });
         this.allGoals.observe(v -> {
             updateGoalLists();
+            updateTopDateString();
+        });
+        this.displayGoalType.observe(v -> {
+            updateGoalLists();
+            updateTopDateString();
+        });
+        this.focus.observe(v -> {
+            updateGoalLists();
+            updateTopDateString();
         });
 
         updateGoalLists();
+        updateTopDateString();
     }
 
     private void updateGoalLists() {
@@ -72,7 +85,6 @@ public class MainViewModel extends ViewModel {
 
         if (allGoalsTemp == null) return;
 
-        String displayDate;
 
         for (var goal : allGoalsTemp) {
             switch (Objects.requireNonNull(this.displayGoalType.getValue())) {
@@ -100,35 +112,43 @@ public class MainViewModel extends ViewModel {
             }
         }
 
+        if (focus.getValue() != null) {
+            displayGoalsTemp = Filter.filter_goals(displayGoalsTemp, focus.getValue());
+        }
 
+        this.displayGoals.setValue(displayGoalsTemp);
+    }
+
+    private void updateTopDateString() {
+        SuccessDate todayDateTemp = this.todayDate.getValue();
+        assert todayDateTemp != null;
+
+        String displayDate;
         switch (Objects.requireNonNull(this.displayGoalType.getValue())) {
             case TODAY:
                 displayDate = "Today  " +
                         todayDateTemp.getDayOfWeekString().substring(0, 3) + " " +
                         todayDateTemp.getMonth() + "/" +
                         todayDateTemp.getDay();
-                this.topDateString.setValue(displayDate);
                 break;
             case TOMORROW:
                 displayDate = "Tomorrow  " +
                         todayDateTemp.nextDay().getDayOfWeekString().substring(0, 3) + " " +
                         todayDateTemp.nextDay().getMonth() + "/" +
                         todayDateTemp.nextDay().getDay();
-                this.topDateString.setValue(displayDate);
                 break;
             case PENDING:
-                this.topDateString.setValue("Pending");
+                displayDate = "Pending";
                 break;
             case RECURRING:
-                this.topDateString.setValue("Recurring");
+                displayDate = "Recurring";
+                break;
+            default:
+                displayDate = "Error in Software";
                 break;
         }
 
-        if (focus.getValue() != null) {
-            displayGoalsTemp = Filter.filter_goals(displayGoalsTemp, focus.getValue());
-        }
-
-        this.displayGoals.setValue(displayGoalsTemp);
+        this.topDateString.setValue(displayDate);
     }
 
     public static final ViewModelInitializer<MainViewModel> initializer =
@@ -142,6 +162,54 @@ public class MainViewModel extends ViewModel {
 
     @NonNull
     public void mockAdvanceDay() {
+        SuccessDate todayDateTemp = this.todayDate.getValue();
+        List<Goal> allGoalsTemp = this.allGoals.getValue();
+
+        if (allGoalsTemp == null || todayDateTemp == null) return;
+
+        List<Goal> todayGoals = new ArrayList<>();
+        List<Goal> tmrGoals = new ArrayList<>();
+
+        Goal modifiedGoal;
+        for (var goal : allGoalsTemp) {
+            /**
+             * IMPORTANT:: tomorrow check must come first, this is because today's recurring task
+             * can be roll over to tomorrow, if we check today first, the logic for tomorrow will
+             * override the roll-over.
+             *
+             * We want the roll-over to override whatever logic in finishing a task early
+              */
+
+            // today: need to advance currIterDate if completed
+            if (goal.ifDateMatchesRecurring(todayDateTemp)) {
+                if (goal.getCurrCompleted()) {
+                    modifiedGoal = goal.withCurrIterDate(goal.calculateNextRecurring(todayDateTemp));
+                    modifiedGoal = modifiedGoal.withCurrComplete(false);
+                    goalRepository.save(modifiedGoal);
+                }
+            }
+
+            // tomorrow: need to "delete" completed goals & advance currIterDate
+            if (goal.ifDateMatchesRecurring(todayDateTemp.nextDay())) {
+                if (goal.getNextCompleted()) {
+                    modifiedGoal = goal.withCurrIterDate(goal.calculateNextRecurring(todayDateTemp.nextDay()));
+                    modifiedGoal = modifiedGoal.withNextComplete(false);
+                    goalRepository.save(modifiedGoal);
+                }
+            }
+
+//            // today: need to roll over to tmr if not completed
+//            if (goal.ifDateMatchesRecurring(todayDateTemp)) {
+//                if (goal.getCurrCompleted()) {
+//                    modifiedGoal = goal.withCurrIterDate(goal.calculateNextRecurring(todayDateTemp));
+//                    modifiedGoal = modifiedGoal.withCurrComplete(false);
+//                    goalRepository.save(modifiedGoal);
+//                }
+//            }
+        }
+
+
+
         todayDate.setValue(todayDate.getValue().nextDay());
     }
 
@@ -150,11 +218,33 @@ public class MainViewModel extends ViewModel {
     }
 
     public void setCompleted(Integer id) {
-        goalRepository.setCompleted(id);
+        switch (Objects.requireNonNull(displayGoalType.getValue())) {
+            case PENDING:
+            case TODAY:
+                goalRepository.setCompleted(id);
+                break;
+            case TOMORROW:
+                goalRepository.setNextCompleted(id);
+                break;
+            default:
+                Log.e("MainViewModel", "Shouldn't be able to complete a recurring task");
+                break;
+        }
     }
 
     public void setNonCompleted(Integer id) {
-        goalRepository.setNonCompleted(id);
+        switch (Objects.requireNonNull(displayGoalType.getValue())) {
+            case PENDING:
+            case TODAY:
+                goalRepository.setNonCompleted(id);
+                break;
+            case TOMORROW:
+                goalRepository.setNextNonCompleted(id);
+                break;
+            default:
+                Log.e("MainViewModel", "Shouldn't be able to complete a recurring task");
+                break;
+        }
     }
 
     @NonNull

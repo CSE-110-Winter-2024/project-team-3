@@ -5,7 +5,6 @@ import static androidx.lifecycle.Transformations.map;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Transformations;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,10 +12,8 @@ import java.util.stream.Collectors;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 import edu.ucsd.cse110.successorator.lib.domain.GoalRepository;
 import edu.ucsd.cse110.successorator.lib.domain.SuccessDate;
-import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
 import edu.ucsd.cse110.successorator.util.LiveDataMutableSubjectAdapter;
-import edu.ucsd.cse110.successorator.util.MutableLiveDataSubjectAdapter;
 
 public class RoomGoalRepository implements GoalRepository {
     private final GoalDao goalDao;
@@ -132,11 +129,19 @@ public class RoomGoalRepository implements GoalRepository {
 
     @Override
     public void setCompleted(int id) {
-        goalDao.setCompleted(id);
+        goalDao.setCurrCompleted(id);
+    }
+    @Override
+    public void setNextCompleted(int id) {
+        goalDao.setNextCompleted(id);
+    }
+    @Override
+    public void setNextNonCompleted(int id) {
+        goalDao.setNextNonCompleted(id);
     }
 
     @Override
     public void setNonCompleted(int id) {
-        goalDao.setNonCompleted(id);
+        goalDao.setCurrNonCompleted(id);
     }
 }

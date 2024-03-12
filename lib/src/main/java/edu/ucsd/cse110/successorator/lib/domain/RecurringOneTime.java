@@ -10,8 +10,8 @@ public class RecurringOneTime implements RecurringType{
     }
 
     @Override
-    public boolean ifDateMatchesRecurring(SuccessDate startDate, SuccessDate currIterDate, SuccessDate checkDate) {
-        return startDate.equals(currIterDate);
+    public boolean ifDateMatchesRecurring(SuccessDate startDate, SuccessDate checkDate) {
+        return startDate.equals(checkDate);
     }
 
     @Override
@@ -23,4 +23,8 @@ public class RecurringOneTime implements RecurringType{
         }
     }
 
+    @Override
+    public Date calculateNextRecurring(SuccessDate startDate, SuccessDate todayDateTemp) {
+        return new Date(Long.MAX_VALUE);
+    }
 }
