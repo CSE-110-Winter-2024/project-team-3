@@ -95,6 +95,19 @@ public class Goal {
         return recurringType.ifDateMatchesRecurring(SuccessDate.fromJavaDate(assignDate), checkDate);
     }
 
+    public boolean ifDateMatchesRecurring_NoRollOver(SuccessDate checkDate) {
+        if ( currIterDate != null ) {
+            int deltaDays = SuccessDate.fromJavaDate(currIterDate).toJavaDate().compareTo(checkDate.toJavaDate());
+            if (deltaDays > 0) {
+                return false;
+            } else if (deltaDays == 0) {
+                return recurringType.ifDateMatchesRecurring(SuccessDate.fromJavaDate(assignDate), checkDate);
+            }
+        }
+
+        return recurringType.ifDateMatchesRecurring(SuccessDate.fromJavaDate(assignDate), checkDate);
+    }
+
     public String getDescription() {
         return recurringType.getDescription(assignDate);
     }
@@ -109,6 +122,11 @@ public class Goal {
 
     public Goal withCurrIterDate(Date currIterDate) {
         return new Goal(name, id, currCompleted, nextCompleted, assignDate,
+                currIterDate, recurringType.getType(), focus);
+    }
+
+    public Goal withAssignDate(Date javaDate) {
+        return new Goal(name, id, currCompleted, nextCompleted, javaDate,
                 currIterDate, recurringType.getType(), focus);
     }
 }

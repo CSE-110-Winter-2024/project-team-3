@@ -88,7 +88,7 @@ public class MainViewModel extends ViewModel {
                     }
                     break;
                 case TOMORROW:
-                    if (goal.ifDateMatchesRecurring(todayDateTemp.nextDay())) {
+                    if (goal.ifDateMatchesRecurring_NoRollOver(todayDateTemp.nextDay())) {
                         displayGoalsTemp.add(goal);
                     }
                     break;
@@ -255,5 +255,22 @@ public class MainViewModel extends ViewModel {
 
     public void setFocusType(FocusType focusType) {
         this.focus.setValue(focusType);
+    }
+
+    public Subject<DisplayGoalType> getDisplayGoalType() {
+        return displayGoalType;
+    }
+
+    public void moveGoalToToday(Goal goal) {
+        Goal updateGoal = goal.withAssignDate(Objects.requireNonNull(todayDate.getValue()).toJavaDate());
+        goalRepository.save(updateGoal);
+    }
+    public void moveGoalToTomorrow(Goal goal) {
+        Goal updateGoal = goal.withAssignDate(Objects.requireNonNull(todayDate.getValue()).nextDay().toJavaDate());
+        goalRepository.save(updateGoal);
+    }
+
+    public void deleteGoal(Integer id) {
+        goalRepository.remove(id);
     }
 }

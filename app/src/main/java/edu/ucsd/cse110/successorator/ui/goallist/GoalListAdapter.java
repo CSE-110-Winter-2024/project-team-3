@@ -4,19 +4,24 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.ListItemGoalBinding;
+import edu.ucsd.cse110.successorator.lib.domain.FocusType;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 
 public class GoalListAdapter extends ArrayAdapter<Goal> {
@@ -81,19 +86,69 @@ public class GoalListAdapter extends ArrayAdapter<Goal> {
         }
 
         binding.getRoot().setOnClickListener(v -> {
-            Log.i("GoalListAdapter", "Goal item is clicked");
-            if (binding.goalCheckBox.isChecked()) {
-                binding.goalCheckBox.setChecked(false);
-                binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                activityModel.setNonCompleted(goal.getId());
-            } else {
-                binding.goalCheckBox.setChecked(true);
-                binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                activityModel.setCompleted(goal.getId());
+            switch (Objects.requireNonNull(activityModel.getDisplayGoalType().getValue())) {
+                case TODAY:
+                case TOMORROW:
+                    if (binding.goalCheckBox.isChecked()) {
+                        binding.goalCheckBox.setChecked(false);
+                        binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                        activityModel.setNonCompleted(goal.getId());
+                    } else {
+                        binding.goalCheckBox.setChecked(true);
+                        binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        activityModel.setCompleted(goal.getId());
+                    }
+                    break;
+                case PENDING:
+                case RECURRING:
+                    break;
+            };
+        });
+
+        binding.getRoot().setOnLongClickListener(v -> {
+            switch (Objects.requireNonNull(activityModel.getDisplayGoalType().getValue())) {
+                case TODAY:
+                case TOMORROW:
+                case RECURRING:
+                    break;
+                case PENDING:
+                    showMoveGoalMenu(binding, goal);
+                    break;
             }
+            return true;
         });
 
         return binding.getRoot();
+    }
+
+    private void showMoveGoalMenu(ListItemGoalBinding binding, Goal goal) {
+        // Initializing the popup menu and giving the reference as current context
+        PopupMenu popupMenu = new PopupMenu(getContext(), binding.goalTitle);
+
+        // Inflating popup menu from popup_menu.xml file
+        popupMenu.getMenuInflater().inflate(R.menu.move_goal_popup_menu, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (Objects.requireNonNull(menuItem.getTitle()).toString()) {
+                    case "Move to Today":
+                        activityModel.moveGoalToToday(goal);
+                        break;
+                    case "Move to Tomorrow":
+                        activityModel.moveGoalToTomorrow(goal);
+                        break;
+                    case "Finish":
+                        activityModel.setCompleted(goal.getId());
+                        break;
+                    case "Delete":
+                        activityModel.deleteGoal(goal.getId());
+                        break;
+                }
+                return true;
+            }
+        });
+        // Showing the popup menu
+        popupMenu.show();
     }
 
     // The below methods aren't strictly necessary, usually.
