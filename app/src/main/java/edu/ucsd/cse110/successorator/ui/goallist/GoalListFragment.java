@@ -25,6 +25,7 @@ import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentGoalListBinding;
 import edu.ucsd.cse110.successorator.dialog.CreateGoalDialogFragment;
+import edu.ucsd.cse110.successorator.lib.domain.FocusType;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 import edu.ucsd.cse110.successorator.lib.domain.RepeatType;
 import edu.ucsd.cse110.successorator.lib.util.Observer;
@@ -84,6 +85,28 @@ public class GoalListFragment extends Fragment {
         popupMenu.show();
     }
 
+
+    private void showFocusTypeMenu() {
+
+        // Initializing the popup menu and giving the reference as current context
+        PopupMenu popupMenu = new PopupMenu(getContext(), view.focusMenuButton);
+
+        // Inflating popup menu from popup_menu.xml file
+        popupMenu.getMenuInflater().inflate(R.menu.focus_mode_popup_menu, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                String focusTypeString = Objects.requireNonNull(menuItem.getTitle()).toString().toUpperCase();
+                if (focusTypeString.equals("CANCEL")) focusTypeString = "ALL";
+                FocusType focusType = FocusType.valueOf(focusTypeString);
+                activityModel.setFocusType(focusType);
+                return true;
+            }
+        });
+        // Showing the popup menu
+        popupMenu.show();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -110,6 +133,10 @@ public class GoalListFragment extends Fragment {
         });
         view.dateText.setOnClickListener(v -> {
             showGoalTypeMenu();
+        });
+
+        view.focusMenuButton.setOnClickListener(v -> {
+            showFocusTypeMenu();
         });
 
 

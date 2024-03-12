@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import edu.ucsd.cse110.successorator.lib.domain.FocusType;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 import edu.ucsd.cse110.successorator.lib.domain.Filter;
 import edu.ucsd.cse110.successorator.lib.domain.GoalRepository;
@@ -31,7 +32,7 @@ public class MainViewModel extends ViewModel {
     private final @NonNull MutableSubject<DisplayGoalType> displayGoalType;
     private final @NonNull Subject<List<Goal>> allGoals;
 
-    private final @NonNull MutableSubject<String> focus;
+    private final @NonNull MutableSubject<FocusType> focus;
 
     public MainViewModel(@NonNull GoalRepository goalRepository) {
         this.goalRepository = goalRepository;
@@ -45,7 +46,7 @@ public class MainViewModel extends ViewModel {
         this.allGoals = goalRepository.findAll();
 
         this.todayDate.setValue(date);
-        this.focus.setValue("All");
+        this.focus.setValue(FocusType.ALL);
         this.topDateString.setValue("default");
         this.displayGoalType.setValue(DisplayGoalType.TODAY);
 
@@ -250,5 +251,9 @@ public class MainViewModel extends ViewModel {
 
     public void setDisplayGoalType(@NonNull DisplayGoalType displayGoalType) {
         this.displayGoalType.setValue(displayGoalType);
+    }
+
+    public void setFocusType(FocusType focusType) {
+        this.focus.setValue(focusType);
     }
 }

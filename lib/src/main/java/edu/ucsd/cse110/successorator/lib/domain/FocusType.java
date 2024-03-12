@@ -4,5 +4,6 @@ public enum FocusType {
     HOME,
     WORK,
     ERRANDS,
-    SCHOOL
+    SCHOOL,
+    ALL
 };

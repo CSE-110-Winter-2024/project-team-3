@@ -9,13 +9,13 @@ import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
 
 public class Filter {
 
-    public static List<Goal> filter_goals(@NonNull List<Goal> list_goals,@NonNull String focus){
+    public static List<Goal> filter_goals(@NonNull List<Goal> list_goals,@NonNull FocusType focusType){
         List<Goal> filtered_goals = new ArrayList<>();
         for(Goal curr_goal : list_goals){
-            if (focus.equals("All")){
+            if (focusType == FocusType.ALL){
                 filtered_goals.add(curr_goal);
             }
-            else if (curr_goal.get_focus().equals(focus)){
+            else if (curr_goal.get_focus() == focusType){
                 filtered_goals.add(curr_goal);
             }
 
