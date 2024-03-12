@@ -15,9 +15,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import edu.ucsd.cse110.successorator.MainActivity;
 import edu.ucsd.cse110.successorator.MainViewModel;
+import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.FragmentGoalListBinding;
 import edu.ucsd.cse110.successorator.dialog.CreateGoalDialogFragment;
+import edu.ucsd.cse110.successorator.dialog.CreateSelectGoalTypeFragment;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 import edu.ucsd.cse110.successorator.lib.util.Observer;
 
@@ -27,6 +30,7 @@ public class GoalListFragment extends Fragment {
     private GoalListAdapter adapter;
 
     private Observer<List<Goal>> pastObserver = null;
+
 
     public GoalListFragment() {
         // Required empty public constructor
@@ -80,6 +84,16 @@ public class GoalListFragment extends Fragment {
             dialogFragment.show(getChildFragmentManager(), "test");
         });
 
+        view.typeMenu.setOnClickListener(v -> {
+            var goalDialogFragment = CreateSelectGoalTypeFragment.newInstance();
+            goalDialogFragment.show(getChildFragmentManager(), "SelectGoalType");
+        });
+
+        view.focusMenuButton.setOnClickListener(v-> {
+            var dialogFragment = CreateGoalDialogFragment.newInstance();
+            dialogFragment.show(getChildFragmentManager(), "test");
+        });
+
 
         activityModel.getTodayGoals().observe(goalsSubject -> {
             if (goalsSubject == null) return;
@@ -95,4 +109,5 @@ public class GoalListFragment extends Fragment {
 
         return view.getRoot();
     }
+
 }
