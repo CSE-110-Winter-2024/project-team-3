@@ -1,6 +1,7 @@
 package edu.ucsd.cse110.successorator.ui.goallist;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,6 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
 import edu.ucsd.cse110.successorator.databinding.ListItemGoalBinding;
@@ -51,32 +51,28 @@ public class GoalListAdapter extends ArrayAdapter<Goal> {
             binding = ListItemGoalBinding.inflate(layoutInflater, parent, false);
         }
 
-        if (goal.isCompleted()) {
-            binding.goalCheckBox.setChecked(true);
-        } else {
-            binding.goalCheckBox.setChecked(false);
-        }
-
         // Populate the view with the flashcard's data.
         binding.goalTitle.setText(goal.getName());
-        binding.goalDescription.setText(goal.getDescription());
 
-        binding.goalCheckBox.setOnClickListener(v -> {
-            if (binding.goalCheckBox.isChecked()) {
-                activityModel.getDay().getGoalRepository().setCompleted(goal.getId());
-            } else {
-                activityModel.getDay().getGoalRepository().setNonCompleted(goal.getId());
-            }
-        });
+
+        if (goal.getCurrCompleted()) {
+            binding.goalCheckBox.setChecked(true);
+            binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else {
+            binding.goalCheckBox.setChecked(false);
+            binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
 
         binding.getRoot().setOnClickListener(v -> {
             Log.i("GoalListAdapter", "Goal item is clicked");
             if (binding.goalCheckBox.isChecked()) {
                 binding.goalCheckBox.setChecked(false);
-                activityModel.getDay().getGoalRepository().setNonCompleted(goal.getId());
+                binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                activityModel.setNonCompleted(goal.getId());
             } else {
                 binding.goalCheckBox.setChecked(true);
-                activityModel.getDay().getGoalRepository().setCompleted(goal.getId());
+                binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                activityModel.setCompleted(goal.getId());
             }
         });
 
