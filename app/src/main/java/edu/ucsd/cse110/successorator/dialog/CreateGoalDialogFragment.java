@@ -123,6 +123,7 @@ public class CreateGoalDialogFragment extends DialogFragment {
             case RECURRING:
                 view.datePickerWrapper.setVisibility(View.VISIBLE);
                 view.oneTimeOption.setVisibility(View.GONE);
+                view.dailyOption.setChecked(true);
                 break;
         }
 
