@@ -1,6 +1,7 @@
 package edu.ucsd.cse110.successorator.ui.goallist;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,12 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import edu.ucsd.cse110.successorator.MainViewModel;
+import edu.ucsd.cse110.successorator.R;
 import edu.ucsd.cse110.successorator.databinding.ListItemGoalBinding;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 
@@ -51,32 +53,43 @@ public class GoalListAdapter extends ArrayAdapter<Goal> {
             binding = ListItemGoalBinding.inflate(layoutInflater, parent, false);
         }
 
-        if (goal.isCompleted()) {
-            binding.goalCheckBox.setChecked(true);
-        } else {
-            binding.goalCheckBox.setChecked(false);
-        }
-
         // Populate the view with the flashcard's data.
         binding.goalTitle.setText(goal.getName());
-        binding.goalDescription.setText(goal.getDescription());
+        switch (goal.get_focus()) {
+            case HOME:
+                binding.focusTypeLabel.setBackgroundTintList( ContextCompat.getColorStateList(getContext(), R.color.H_color));
+                break;
+            case WORK:
+                binding.focusTypeLabel.setBackgroundTintList( ContextCompat.getColorStateList(getContext(), R.color.W_color));
+                break;
+            case ERRANDS:
+                binding.focusTypeLabel.setBackgroundTintList( ContextCompat.getColorStateList(getContext(), R.color.E_color));
+                break;
+            case SCHOOL:
+                binding.focusTypeLabel.setBackgroundTintList( ContextCompat.getColorStateList(getContext(), R.color.S_color));
+                break;
+        }
+        binding.focusTypeLabel.setText(goal.get_focus().name().substring(0, 1));
 
-        binding.goalCheckBox.setOnClickListener(v -> {
-            if (binding.goalCheckBox.isChecked()) {
-                activityModel.getDay().getGoalRepository().setCompleted(goal.getId());
-            } else {
-                activityModel.getDay().getGoalRepository().setNonCompleted(goal.getId());
-            }
-        });
+
+        if (goal.getCurrCompleted()) {
+            binding.goalCheckBox.setChecked(true);
+            binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else {
+            binding.goalCheckBox.setChecked(false);
+            binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
 
         binding.getRoot().setOnClickListener(v -> {
             Log.i("GoalListAdapter", "Goal item is clicked");
             if (binding.goalCheckBox.isChecked()) {
                 binding.goalCheckBox.setChecked(false);
-                activityModel.getDay().getGoalRepository().setNonCompleted(goal.getId());
+                binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                activityModel.setNonCompleted(goal.getId());
             } else {
                 binding.goalCheckBox.setChecked(true);
-                activityModel.getDay().getGoalRepository().setCompleted(goal.getId());
+                binding.goalTitle.setPaintFlags(binding.goalTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                activityModel.setCompleted(goal.getId());
             }
         });
 
