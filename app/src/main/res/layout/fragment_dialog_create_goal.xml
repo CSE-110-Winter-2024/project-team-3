@@ -6,41 +6,159 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/card_front_edit_text"
+        android:id="@+id/card_edit_text"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="Front text..."
+        android:hint="@string/text"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/card_back_edit_text"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:hint="Back text..."
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_front_edit_text" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:autofillHints="" />
 
     <RadioGroup
-        android:layout_width="276dp"
+        android:id="@+id/focus_options"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_edit_text">
+
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"/>
+
+        <RadioButton
+            android:id="@+id/H_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+
+            android:background="@drawable/ic_filled_circle"
+            android:backgroundTint="@color/H_color"
+            android:button="@null"
+            android:buttonTint="@color/black"
+            android:gravity="center"
+            android:tag="HOME"
+            android:text="@string/h" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <RadioButton
+            android:id="@+id/W_button"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:background="@drawable/ic_filled_circle"
+            android:backgroundTint="#DDDDDD"
+            android:button="@null"
+            android:buttonTint="@color/black"
+            android:gravity="center"
+            android:tag="WORK"
+            android:text="@string/w" />
+
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <RadioButton
+            android:id="@+id/E_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/ic_filled_circle"
+            android:backgroundTint="#DDDDDD"
+            android:button="@null"
+            android:buttonTint="@color/black"
+            android:checked="true"
+            android:gravity="center"
+            android:tag="ERRANDS"
+            android:text="@string/e" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <RadioButton
+            android:id="@+id/S_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/ic_filled_circle"
+            android:backgroundTint="#DDDDDD"
+            android:button="@null"
+            android:buttonTint="@color/black"
+            android:gravity="center"
+            android:tag="SCHOOL"
+            android:text="@string/s" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"/>
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/RecurringOptions"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
+        android:layout_marginEnd="16dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_back_edit_text">
+        app:layout_constraintTop_toBottomOf="@+id/focus_options">
+
+        <RadioButton
+            android:id="@+id/one_time_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:tag="ONE_TIME"
+            android:text="@string/one_time" />
+
+        <RadioButton
+            android:id="@+id/daily_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="DAILY"
+            android:text="@string/daily" />
+
+        <RadioButton
+            android:id="@+id/weekly_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="WEEKLY"
+            android:text="@string/weekly" />
+
+        <RadioButton
+            android:id="@+id/monthlyButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:tag="MONTHLY"
+            android:text="@string/monthly" />
+
+        <RadioButton
+            android:id="@+id/yearlyButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="YEARLY"
+            android:text="@string/yearly" />
+
     </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
