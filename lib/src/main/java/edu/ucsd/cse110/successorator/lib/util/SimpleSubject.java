@@ -1,5 +1,6 @@
 package edu.ucsd.cse110.successorator.lib.util;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class SimpleSubject<T> implements MutableSubject<T> {
 
 
     @Override
-    public void setValue(T value) {
+    public void setValue(@NonNull T value) {
         this.value = value;
         notifyObservers();
     }
