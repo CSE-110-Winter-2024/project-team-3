@@ -164,7 +164,7 @@ public class MainViewModel extends ViewModel {
         List<Goal> todayGoals = new ArrayList<>();
         List<Goal> tmrGoals = new ArrayList<>();
 
-        Goal modifiedGoal = null;
+        Goal modifiedGoal;
         for (var goal : allGoalsTemp) {
             /**
              * IMPORTANT:: tomorrow check must come first, this is because today's recurring task
@@ -173,6 +173,7 @@ public class MainViewModel extends ViewModel {
              *
              * We want the roll-over to override whatever logic in finishing a task early
               */
+            modifiedGoal = goal;
 
             // tomorrow: need to "delete" completed goals & advance currIterDate
             if (goal.ifDateMatchesRecurring(todayDateTemp.nextDay())) {
@@ -185,7 +186,7 @@ public class MainViewModel extends ViewModel {
             // today: need to advance currIterDate if completed
             if (goal.ifDateMatchesRecurring(todayDateTemp)) {
                 if (goal.getCurrCompleted()) {
-                    modifiedGoal = goal.withCurrIterDate(goal.calculateNextRecurring(todayDateTemp));
+                    modifiedGoal = modifiedGoal.withCurrIterDate(goal.calculateNextRecurring(todayDateTemp));
                     modifiedGoal = modifiedGoal.withCurrComplete(false);
 
                     if (goal.getNextCompleted()) {
@@ -193,11 +194,11 @@ public class MainViewModel extends ViewModel {
                         modifiedGoal = modifiedGoal.withNextComplete(false);
                     }
                 } else {
-                    modifiedGoal = goal.withCurrIterDate(todayDateTemp.toJavaDate());
+                    modifiedGoal = modifiedGoal.withCurrIterDate(todayDateTemp.toJavaDate());
                 }
             }
 
-            if (modifiedGoal != null) {
+            if (modifiedGoal != goal) {
                 goalRepository.save(modifiedGoal);
             }
         }
