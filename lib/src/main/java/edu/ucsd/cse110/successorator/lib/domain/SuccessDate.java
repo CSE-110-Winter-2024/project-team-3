@@ -1,9 +1,9 @@
 package edu.ucsd.cse110.successorator.lib.domain;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.TextStyle;
 import java.util.Date;
 import java.util.Locale;
@@ -44,9 +44,25 @@ public class SuccessDate {
 
     // New method to get the day of the week
     @NonNull
-    public String getDayOfWeek() {
+    public String getDayOfWeekString() {
         LocalDate date = LocalDate.of(year, month, day);
         return date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
+    }
+
+    @NonNull
+    public int getDayOfWeek() {
+        LocalDate date = LocalDate.of(year, month, day);
+        return date.getDayOfWeek().getValue();
+    }
+
+    public static SuccessDate fromJavaDate(Date date) {
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return new SuccessDate(localDate.getYear(), localDate.getMonth().getValue(), localDate.getDayOfMonth());
+    }
+
+    public Date toJavaDate() {
+        LocalDate date = LocalDate.of(year, month, day);
+        return Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
     @Override
@@ -59,5 +75,19 @@ public class SuccessDate {
         LocalDate date = LocalDate.of(year, month, day);
         date = date.plusDays(1);
         return new SuccessDate(date.getYear(), date.getMonth().getValue(), date.getDayOfMonth());
+    }
+
+    public LocalDate toLocalDate() {
+        return LocalDate.of(year, month, day);
+    }
+
+
+    public static SuccessDate fromLocalDate(LocalDate localDate) {
+        return new SuccessDate(localDate.getYear(), localDate.getMonth().getValue(), localDate.getDayOfMonth());
+    }
+
+    public String getMonthString() {
+        LocalDate date = LocalDate.of(year, month, day);
+        return date.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault());
     }
 }

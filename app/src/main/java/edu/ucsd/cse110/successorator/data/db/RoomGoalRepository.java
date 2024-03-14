@@ -5,17 +5,15 @@ import static androidx.lifecycle.Transformations.map;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Transformations;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
 import edu.ucsd.cse110.successorator.lib.domain.GoalRepository;
-import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
+import edu.ucsd.cse110.successorator.lib.domain.SuccessDate;
 import edu.ucsd.cse110.successorator.lib.util.Subject;
 import edu.ucsd.cse110.successorator.util.LiveDataMutableSubjectAdapter;
-import edu.ucsd.cse110.successorator.util.MutableLiveDataSubjectAdapter;
 
 public class RoomGoalRepository implements GoalRepository {
     private final GoalDao goalDao;
@@ -35,6 +33,65 @@ public class RoomGoalRepository implements GoalRepository {
     @Override
     public Subject<List<Goal>> findAll() {
         var entitiesLiveData = goalDao.findAllAsLiveData();
+        var goalsLiveData = map(entitiesLiveData, entities -> {
+            return entities.stream()
+                    .map(GoalEntity::toGoal)
+                    .collect(Collectors.toList());
+        });
+
+        Log.i("roomGoalRepository", (goalsLiveData.getValue() == null) ? "is null" : "not null");
+
+        return new LiveDataMutableSubjectAdapter<>(goalsLiveData);
+    }
+
+
+    @Override
+    public Subject<List<Goal>> findAll(SuccessDate successDate) {
+        Long startOfDay = successDate.toJavaDate().getTime();
+        var entitiesLiveData = goalDao.findAllAsLiveData(startOfDay, startOfDay + (24*60*60*1000));
+        var goalsLiveData = map(entitiesLiveData, entities -> {
+            return entities.stream()
+                    .map(GoalEntity::toGoal)
+                    .collect(Collectors.toList());
+        });
+
+        Log.i("roomGoalRepository", (goalsLiveData.getValue() == null) ? "is null" : "not null");
+
+        return new LiveDataMutableSubjectAdapter<>(goalsLiveData);
+    }
+
+
+    @Override
+    public Subject<List<Goal>> findOneTime() {
+        var entitiesLiveData = goalDao.findAllOneTime();
+        var goalsLiveData = map(entitiesLiveData, entities -> {
+            return entities.stream()
+                    .map(GoalEntity::toGoal)
+                    .collect(Collectors.toList());
+        });
+
+        Log.i("roomGoalRepository", (goalsLiveData.getValue() == null) ? "is null" : "not null");
+
+        return new LiveDataMutableSubjectAdapter<>(goalsLiveData);
+    }
+
+    @Override
+    public Subject<List<Goal>> findPending() {
+        var entitiesLiveData = goalDao.findAllPending();
+        var goalsLiveData = map(entitiesLiveData, entities -> {
+            return entities.stream()
+                    .map(GoalEntity::toGoal)
+                    .collect(Collectors.toList());
+        });
+
+        Log.i("roomGoalRepository", (goalsLiveData.getValue() == null) ? "is null" : "not null");
+
+        return new LiveDataMutableSubjectAdapter<>(goalsLiveData);
+    }
+
+    @Override
+    public Subject<List<Goal>> findRecurring() {
+        var entitiesLiveData = goalDao.findAllRecurring();
         var goalsLiveData = map(entitiesLiveData, entities -> {
             return entities.stream()
                     .map(GoalEntity::toGoal)
@@ -72,11 +129,19 @@ public class RoomGoalRepository implements GoalRepository {
 
     @Override
     public void setCompleted(int id) {
-        goalDao.setCompleted(id);
+        goalDao.setCurrCompleted(id);
+    }
+    @Override
+    public void setNextCompleted(int id) {
+        goalDao.setNextCompleted(id);
+    }
+    @Override
+    public void setNextNonCompleted(int id) {
+        goalDao.setNextNonCompleted(id);
     }
 
     @Override
     public void setNonCompleted(int id) {
-        goalDao.setNonCompleted(id);
+        goalDao.setCurrNonCompleted(id);
     }
 }
