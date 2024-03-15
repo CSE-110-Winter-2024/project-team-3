@@ -1,5 +1,6 @@
 package edu.ucsd.cse110.successorator.lib.data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,8 +99,11 @@ public class InMemoryGoalSource {
         allGoalsMutableSubject.setValue(getGoals());
     }
     public void putGoal(Goal old_goal) {
-        Goal goal = old_goal.withId(nextid);
-        nextid++;
+        Goal goal = old_goal;
+        if (goal.getId() == null) {
+            goal = old_goal.withId(nextid);
+            nextid++;
+        }
         Goals.put(goal.getId(), goal);
         if (GoalSubjects.containsKey(goal.getId())) {
             GoalSubjects.get(goal.getId()).setValue(goal);
@@ -122,6 +126,7 @@ public class InMemoryGoalSource {
         for (Goal Goal : DEFAULT_GOALS) {
             data.putGoal(Goal);
         }
+        data.allGoalsMutableSubject.setValue(new ArrayList<>());
         return data;
     }
 

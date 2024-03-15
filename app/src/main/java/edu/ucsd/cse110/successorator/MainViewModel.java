@@ -10,9 +10,11 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.successorator.lib.domain.FocusType;
 import edu.ucsd.cse110.successorator.lib.domain.Goal;
@@ -47,6 +49,10 @@ public class MainViewModel extends ViewModel {
             bufferDate = newDate;
             todayDate.setValue(newDate);
         }
+    }
+
+    public void setTodayDate(SuccessDate date) {
+        this.todayDate.setValue(date);
     }
 
     public MainViewModel(@NonNull GoalRepository goalRepository) {
@@ -142,7 +148,47 @@ public class MainViewModel extends ViewModel {
             displayGoalsTemp = Filter.filter_goals(displayGoalsTemp, focus.getValue());
         }
 
-        this.displayGoals.setValue(displayGoalsTemp);
+
+        List<Goal> nonCompletedGoals = new ArrayList<>();
+        List<Goal> completedGoals = new ArrayList<>();
+
+        boolean anyNull = false;
+        for (var goal : displayGoalsTemp) {
+            if (goal.getAssignDate() == null) anyNull = true;
+            if (goal.getCurrCompleted()) {
+                completedGoals.add(goal);
+            } else {
+                nonCompletedGoals.add(goal);
+            }
+        }
+
+        if ((getDisplayGoalType().getValue() != DisplayGoalType.PENDING)
+                && (!anyNull)) {
+            completedGoals = completedGoals.stream()
+                    .sorted(Comparator.comparing(Goal::getAssignDate))
+                    .sorted(Comparator.comparing(Goal::get_focus))
+                    .collect(Collectors.toList());
+            nonCompletedGoals = nonCompletedGoals.stream()
+                    .sorted(Comparator.comparing(Goal::getAssignDate))
+                    .sorted(Comparator.comparing(Goal::get_focus))
+                    .collect(Collectors.toList());
+        } else {
+            completedGoals = completedGoals.stream()
+                    .sorted(Comparator.comparing(Goal::getId))
+                    .sorted(Comparator.comparing(Goal::get_focus))
+                    .collect(Collectors.toList());
+            nonCompletedGoals = nonCompletedGoals.stream()
+                    .sorted(Comparator.comparing(Goal::getId))
+                    .sorted(Comparator.comparing(Goal::get_focus))
+                    .collect(Collectors.toList());
+        }
+
+
+        ArrayList<Goal> newOrderedGoals = new ArrayList<>();
+        newOrderedGoals.addAll(nonCompletedGoals);
+        newOrderedGoals.addAll(completedGoals);
+
+        this.displayGoals.setValue(newOrderedGoals);
     }
 
     private void updateTopDateString() {
@@ -209,7 +255,7 @@ public class MainViewModel extends ViewModel {
 
             // tomorrow: need to "delete" completed goals & advance currIterDate
             if (goal.ifDateMatchesRecurring(todayDateTemp.nextDay())) {
-                if (goal.getNextCompleted()) {
+                if (goal.getNextCompleted() && goal.getCurrCompleted()) {
                     modifiedGoal = modifiedGoal.withCurrIterDate(goal.calculateNextRecurring(todayDateTemp.nextDay()));
                     modifiedGoal = modifiedGoal.withNextComplete(false);
                 }
@@ -225,8 +271,6 @@ public class MainViewModel extends ViewModel {
                         modifiedGoal = modifiedGoal.withCurrIterDate(goal.calculateNextRecurring(todayDateTemp.nextDay()));
                         modifiedGoal = modifiedGoal.withNextComplete(false);
                     }
-                } else {
-                    modifiedGoal = modifiedGoal.withCurrIterDate(todayDateTemp.toJavaDate());
                 }
             }
 
