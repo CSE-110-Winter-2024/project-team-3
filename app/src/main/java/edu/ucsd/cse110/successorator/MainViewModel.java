@@ -209,7 +209,7 @@ public class MainViewModel extends ViewModel {
 
             // tomorrow: need to "delete" completed goals & advance currIterDate
             if (goal.ifDateMatchesRecurring(todayDateTemp.nextDay())) {
-                if (goal.getNextCompleted()) {
+                if (goal.getNextCompleted() && goal.getCurrCompleted()) {
                     modifiedGoal = modifiedGoal.withCurrIterDate(goal.calculateNextRecurring(todayDateTemp.nextDay()));
                     modifiedGoal = modifiedGoal.withNextComplete(false);
                 }
@@ -225,8 +225,6 @@ public class MainViewModel extends ViewModel {
                         modifiedGoal = modifiedGoal.withCurrIterDate(goal.calculateNextRecurring(todayDateTemp.nextDay()));
                         modifiedGoal = modifiedGoal.withNextComplete(false);
                     }
-                } else {
-                    modifiedGoal = modifiedGoal.withCurrIterDate(todayDateTemp.toJavaDate());
                 }
             }
 
