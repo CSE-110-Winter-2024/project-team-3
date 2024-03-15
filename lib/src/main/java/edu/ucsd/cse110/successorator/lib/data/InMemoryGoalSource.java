@@ -1,6 +1,5 @@
 package edu.ucsd.cse110.successorator.lib.data;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,7 @@ import edu.ucsd.cse110.successorator.lib.util.MutableSubject;
  * for testing.
  */
 
-public class InMemoryDataSource {
+public class InMemoryGoalSource {
     private final Map<Integer, Goal> Goals
             = new HashMap<>();
     private final Map<Integer, MutableSubject<Goal>> GoalSubjects
@@ -25,7 +24,7 @@ public class InMemoryDataSource {
 
     private int nextid = 0;
 
-    public InMemoryDataSource() {
+    public InMemoryGoalSource() {
     }
 
     public List<Goal> getGoals() {
@@ -52,7 +51,26 @@ public class InMemoryDataSource {
 
     // completeGoal
     public void completeGoal(int id) {
-        Goal modifiedGoal = getGoal(id).withComplete(true);
+        Goal modifiedGoal = getGoal(id).withCurrComplete(true);
+        Goals.put(modifiedGoal.getId(), modifiedGoal);
+        if (GoalSubjects.containsKey(modifiedGoal.getId())) {
+            GoalSubjects.get(modifiedGoal.getId()).setValue(modifiedGoal);
+        }
+
+        allGoalsMutableSubject.setValue(getGoals());
+    }
+
+    public void nextCompleteGoal(int id) {
+        Goal modifiedGoal = getGoal(id).withNextComplete(true);
+        Goals.put(modifiedGoal.getId(), modifiedGoal);
+        if (GoalSubjects.containsKey(modifiedGoal.getId())) {
+            GoalSubjects.get(modifiedGoal.getId()).setValue(modifiedGoal);
+        }
+
+        allGoalsMutableSubject.setValue(getGoals());
+    }
+    public void nextUnCompleteGoal(int id) {
+        Goal modifiedGoal = getGoal(id).withNextComplete(false);
         Goals.put(modifiedGoal.getId(), modifiedGoal);
         if (GoalSubjects.containsKey(modifiedGoal.getId())) {
             GoalSubjects.get(modifiedGoal.getId()).setValue(modifiedGoal);
@@ -63,7 +81,7 @@ public class InMemoryDataSource {
 
     // completeGoal
     public void unCompleteGoal(int id) {
-        Goal modifiedGoal = getGoal(id).withComplete(false);
+        Goal modifiedGoal = getGoal(id).withCurrComplete(false);
         Goals.put(modifiedGoal.getId(), modifiedGoal);
         if (GoalSubjects.containsKey(modifiedGoal.getId())) {
             GoalSubjects.get(modifiedGoal.getId()).setValue(modifiedGoal);
@@ -96,24 +114,11 @@ public class InMemoryDataSource {
         }
     }
 
-    public int getMaxPriority() {
-        return this.Goals.values().stream()
-                .map(Goal::getPriority)
-                .max(Integer::compareTo)
-                .orElse(Integer.MIN_VALUE);
-    }
-
     public final static List<Goal> DEFAULT_GOALS = List.of(
-            new Goal("SRP", "Single Responsibility Principle", 10, 1, new Date()),
-            new Goal("OCP", "Open-Closed Principle", 10, 2, new Date()),
-            new Goal("LSP", "Liskov Substitution Principle", 10, 3, new Date()),
-            new Goal("ISP", "Interface Segregation Principle", 10, 4, new Date()),
-            new Goal("DIP", "Dependency Inversion Principle", 10, 5, new Date()),
-            new Goal("LKP", "Least Knowledge Principle (Law of Demeter)", 10, 6, new Date())
     );
 
-    public static InMemoryDataSource fromDefault() {
-        var data = new InMemoryDataSource();
+    public static InMemoryGoalSource fromDefault() {
+        var data = new InMemoryGoalSource();
         for (Goal Goal : DEFAULT_GOALS) {
             data.putGoal(Goal);
         }
