@@ -60,7 +60,26 @@ public class BDDs {
                 Date.from(Instant.parse("2024-04-01T15:23:01Z")),
                 RepeatType.YEARLY, FocusType.ALL);
 
+        datasource.putGoal(weeklyGoal);
+        datasource.putGoal(monthlyGoal);
+        datasource.putGoal(yearlyGoal);
 
+        // weekly
+        assertEquals(weeklyGoal.getAssignDate(), Date.from(Instant.parse("2024-04-01T15:23:01Z")));
+        assertEquals(weeklyGoal.ifDateMatchesRecurring(new SuccessDate(2024, 4, 8)), true);
+        assertNotEquals(weeklyGoal.ifDateMatchesRecurring(new SuccessDate(2024, 4, 10)), false);
+
+        // monthly
+        assertEquals(monthlyGoal.getAssignDate(), Date.from(Instant.parse("2024-04-01T15:23:01Z")));
+        assertEquals(monthlyGoal.ifDateMatchesRecurring(new SuccessDate(2024, 5, 1)), true);
+        assertNotEquals(monthlyGoal.ifDateMatchesRecurring(new SuccessDate(2024, 5, 3)), false);
+        assertEquals(monthlyGoal.ifDateMatchesRecurring(new SuccessDate(2025, 5, 1)), true);
+        assertNotEquals(monthlyGoal.ifDateMatchesRecurring(new SuccessDate(2025, 5, 3)), false);
+
+        // yearly
+        assertEquals(yearlyGoal.getAssignDate(), Date.from(Instant.parse("2024-04-01T15:23:01Z")));
+        assertEquals(yearlyGoal.ifDateMatchesRecurring(new SuccessDate(2025, 4, 1)),true);
+        assertNotEquals(yearlyGoal.ifDateMatchesRecurring(new SuccessDate(2024, 4, 2)), false);
     }
 
     @Test
