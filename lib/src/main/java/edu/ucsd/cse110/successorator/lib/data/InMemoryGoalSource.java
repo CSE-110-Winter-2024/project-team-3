@@ -60,6 +60,25 @@ public class InMemoryGoalSource {
         allGoalsMutableSubject.setValue(getGoals());
     }
 
+    public void nextCompleteGoal(int id) {
+        Goal modifiedGoal = getGoal(id).withNextComplete(true);
+        Goals.put(modifiedGoal.getId(), modifiedGoal);
+        if (GoalSubjects.containsKey(modifiedGoal.getId())) {
+            GoalSubjects.get(modifiedGoal.getId()).setValue(modifiedGoal);
+        }
+
+        allGoalsMutableSubject.setValue(getGoals());
+    }
+    public void nextUnCompleteGoal(int id) {
+        Goal modifiedGoal = getGoal(id).withNextComplete(false);
+        Goals.put(modifiedGoal.getId(), modifiedGoal);
+        if (GoalSubjects.containsKey(modifiedGoal.getId())) {
+            GoalSubjects.get(modifiedGoal.getId()).setValue(modifiedGoal);
+        }
+
+        allGoalsMutableSubject.setValue(getGoals());
+    }
+
     // completeGoal
     public void unCompleteGoal(int id) {
         Goal modifiedGoal = getGoal(id).withCurrComplete(false);

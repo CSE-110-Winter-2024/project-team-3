@@ -21,6 +21,7 @@ import edu.ucsd.cse110.successorator.lib.domain.RecurringOneTime;
 import edu.ucsd.cse110.successorator.lib.domain.RecurringType;
 import edu.ucsd.cse110.successorator.lib.domain.RecurringWeekly;
 import edu.ucsd.cse110.successorator.lib.domain.RepeatType;
+import edu.ucsd.cse110.successorator.lib.domain.SimpleGoalRepository;
 import edu.ucsd.cse110.successorator.lib.domain.SuccessDate;
 
 public class BDDs {
@@ -29,8 +30,8 @@ public class BDDs {
     private MainViewModel activityModel;
 
     public BDDs() {
-//        this.goalRepository = new SimpleGoalRepository(datasource);
-//        this.activityModel = new MainViewModel(goalRepository);
+        this.goalRepository = new SimpleGoalRepository(datasource);
+        this.activityModel = new MainViewModel(goalRepository);
     }
 
     @Test
@@ -41,7 +42,10 @@ public class BDDs {
                 Date.from(Instant.parse("2024-04-08T15:23:01Z")),
                 RepeatType.WEEKLY, FocusType.ALL);
 
-        datasource.putGoal(weeklyGoal);
+
+        this.activityModel.putGoal(weeklyGoal);
+
+        assertEquals(this.activityModel.getDisplayGoals().getValue().size(), 1);
 
         // To show that test is created today
 //        assertEquals(weeklyGoal.getAssignDate(), Date.from(Instant.parse("2024-04-01T15:23:01Z")));

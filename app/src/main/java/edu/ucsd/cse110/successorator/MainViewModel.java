@@ -87,15 +87,20 @@ public class MainViewModel extends ViewModel {
 
 
         bufferDate = SuccessDate.fromJavaDate(new Date());
-        Handler handler=new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                updateDate();
 
-                handler.postDelayed(this,2000);
-            }
-        },10000);
+        try {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    updateDate();
+
+                    handler.postDelayed(this, 2000);
+                }
+            }, 10000);
+        } catch (Exception e) {
+
+        }
     }
 
     private void updateGoalLists() {
