@@ -20,7 +20,11 @@ public class RecurringMonthly implements RecurringType{
     @Override
     public boolean ifDateMatchesRecurring(SuccessDate startDate, SuccessDate checkDate) {
         if(startDate.toJavaDate().compareTo(checkDate.toJavaDate()) <= 0){
-            if(startDate.getDay() == checkDate.getDay()){
+            SuccessDate tempDate = startDate;
+            while (checkDate.toJavaDate().compareTo(tempDate.toJavaDate()) > 0) {
+                tempDate = SuccessDate.fromJavaDate(calculateNextRecurring(startDate, tempDate));
+            }
+            if (tempDate.equals(checkDate)) {
                 return true;
             }
         }
@@ -32,14 +36,62 @@ public class RecurringMonthly implements RecurringType{
         return getStaticDescription(SuccessDate.fromJavaDate(startDate));
     }
 
-    @Override
-    public Date calculateNextRecurring(SuccessDate startDate, SuccessDate todayDateTemp) {
-        LocalDate tempDate = startDate.toJavaDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        while (Date.from(tempDate.atStartOfDay(ZoneId.systemDefault()).toInstant()).compareTo(todayDateTemp.toJavaDate()) <= 0) {
-            tempDate = tempDate.plusMonths(1);
+    private SuccessDate getRecurringOfMonth(SuccessDate dateToMatch, int year, int month) {
+        LocalDate dayForCalculation = (new SuccessDate(year, month, 1)).toLocalDate();
+
+        // get the date to the correct week day
+        while (SuccessDate.fromLocalDate(dayForCalculation).getDayOfWeek() != dateToMatch.getDayOfWeek()) {
+            dayForCalculation = dayForCalculation.plusDays(1);
         }
 
-        return Date.from(tempDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        // now dayForCalculation is on the first _____ weekday
+
+        // add weeks so that it is the correct week on month
+        for (int i = 1; i < dateToMatch.getWeekOfMonth(); i++) {
+            dayForCalculation = dayForCalculation.plusWeeks(1);
+        }
+
+        return SuccessDate.fromLocalDate(dayForCalculation);
+    }
+
+    @Override
+    public Date calculateNextRecurring(SuccessDate startDate, SuccessDate todayDateTemp) {
+
+        SuccessDate previousMonthRecurring;
+        if (todayDateTemp.getMonth() - 1 <= 0) {
+            previousMonthRecurring = getRecurringOfMonth(
+                    startDate,
+                    todayDateTemp.getYear() - 1,
+                    12);
+        } else {
+            previousMonthRecurring = getRecurringOfMonth(
+                    startDate,
+                    todayDateTemp.getYear(),
+                    todayDateTemp.getMonth() - 1);
+        }
+
+        SuccessDate currMonthRecurring = getRecurringOfMonth(
+                startDate,
+                todayDateTemp.getYear(),
+                todayDateTemp.getMonth());
+
+        if (previousMonthRecurring.toJavaDate().compareTo(todayDateTemp.toJavaDate()) > 0) {
+            return previousMonthRecurring.toJavaDate();
+        } else if (currMonthRecurring.toJavaDate().compareTo(todayDateTemp.toJavaDate()) > 0) {
+            return currMonthRecurring.toJavaDate();
+        } else {
+            if (todayDateTemp.getMonth() + 1 > 12) {
+                return getRecurringOfMonth(
+                        startDate,
+                        todayDateTemp.getYear() + 1,
+                        1).toJavaDate();
+            } else {
+                return getRecurringOfMonth(
+                        startDate,
+                        todayDateTemp.getYear(),
+                        todayDateTemp.getMonth() + 1).toJavaDate();
+            }
+        }
     }
 
     public static String getStaticDescription(SuccessDate startDate) {

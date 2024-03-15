@@ -2,6 +2,7 @@ package edu.ucsd.cse110.successorator;
 
 import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY;
 
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,20 @@ public class MainViewModel extends ViewModel {
     private final @NonNull Subject<List<Goal>> allGoals;
 
     private final @NonNull MutableSubject<FocusType> focus;
+
+    private SuccessDate bufferDate;
+
+    private void updateDate() {
+        SuccessDate newDate = SuccessDate.fromJavaDate(new Date());
+        if (!bufferDate.equals(newDate) ){
+            int deltaDays = newDate.toJavaDate().compareTo(todayDate.getValue().toJavaDate());
+            if (deltaDays > 0) {
+                mockAdvanceDay();
+            }
+            bufferDate = newDate;
+            todayDate.setValue(newDate);
+        }
+    }
 
     public MainViewModel(@NonNull GoalRepository goalRepository) {
         this.goalRepository = goalRepository;
@@ -69,6 +84,18 @@ public class MainViewModel extends ViewModel {
 
         updateGoalLists();
         updateTopDateString();
+
+
+        bufferDate = SuccessDate.fromJavaDate(new Date());
+        Handler handler=new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateDate();
+
+                handler.postDelayed(this,2000);
+            }
+        },10000);
     }
 
     private void updateGoalLists() {

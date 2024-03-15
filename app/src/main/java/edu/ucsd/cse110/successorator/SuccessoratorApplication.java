@@ -2,6 +2,7 @@ package edu.ucsd.cse110.successorator;
 
 import android.app.Application;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Room;
 
 import edu.ucsd.cse110.successorator.data.db.RoomGoalRepository;
@@ -36,17 +37,6 @@ public class SuccessoratorApplication extends Application {
             sharePreferences.edit().putBoolean("isFirstRun", false).apply();
         }
 
-
-
-//        Handler handler=new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                updateDate();
-//
-//                handler.postDelayed(this,10000);
-//            }
-//        },10000);
     }
 
 

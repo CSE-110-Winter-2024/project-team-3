@@ -50,6 +50,18 @@ public class SuccessDate {
     }
 
     @NonNull
+    public int getWeekOfMonth() {
+        LocalDate startLocalDate = this.toLocalDate();
+        LocalDate tempLocalDate = this.toLocalDate();
+        int start_numberOccuranceOfWeek = 0;
+        while (startLocalDate.getMonth().getValue() == tempLocalDate.getMonth().getValue()) {
+            tempLocalDate = tempLocalDate.plusWeeks(-1);
+            start_numberOccuranceOfWeek++;
+        }
+        return start_numberOccuranceOfWeek;
+    }
+
+    @NonNull
     public int getDayOfWeek() {
         LocalDate date = LocalDate.of(year, month, day);
         return date.getDayOfWeek().getValue();

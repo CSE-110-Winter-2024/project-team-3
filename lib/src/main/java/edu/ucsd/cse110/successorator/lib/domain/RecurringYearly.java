@@ -16,9 +16,19 @@ public class RecurringYearly implements RecurringType{
         return RepeatType.YEARLY;
     }
 
+    private boolean isLeapYear(int year) {
+        assert year >= 1583; // not valid before this date.
+        return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+    }
 
     @Override
     public boolean ifDateMatchesRecurring(SuccessDate startDate, SuccessDate checkDate) {
+        if (isLeapYear(startDate.getYear()) && !isLeapYear(checkDate.getYear())) {
+            if (checkDate.getMonth() == 3 && checkDate.getDay() == 1) {
+                return true;
+            }
+        }
+
         if(startDate.toJavaDate().compareTo(checkDate.toJavaDate()) <= 0){
             if(startDate.getMonth().equals(checkDate.getMonth())) {
                 if(startDate.getDay().equals(checkDate.getDay())){
@@ -34,13 +44,34 @@ public class RecurringYearly implements RecurringType{
         return getStaticDescription(SuccessDate.fromJavaDate(startDate));
     }
 
+    private SuccessDate nextRecurring(SuccessDate startDate, SuccessDate fromDate) {
+        if (isLeapYear(startDate.getYear())
+            && startDate.getMonth() == 2 && startDate.getDay() == 29) {
+            if (startDate.getMonth() < fromDate.getMonth()
+                    || (startDate.getMonth().equals(fromDate.getMonth())
+                        && ((!isLeapYear(fromDate.getYear()) && fromDate.getMonth() == 2 && fromDate.getDay() == 28) ? fromDate.getDay() + 1 : fromDate.getDay()) < 29)) {
+                return new SuccessDate(fromDate.getYear(), startDate.getMonth(), isLeapYear(fromDate.getYear()) ? 29 : 28);
+            } else {
+                return new SuccessDate(fromDate.getYear() + 1, startDate.getMonth(), isLeapYear(fromDate.getYear() + 1) ? 29 : 28);
+            }
+        } else {
+            if (startDate.getMonth() < fromDate.getMonth()
+                    || (startDate.getMonth().equals(fromDate.getMonth()) && fromDate.getDay() < startDate.getDay())) {
+                return new SuccessDate(fromDate.getYear(), startDate.getMonth(), startDate.getDay());
+            } else {
+                return new SuccessDate(fromDate.getYear() + 1, startDate.getMonth(), startDate.getDay());
+            }
+        }
+
+    }
+
     @Override
     public Date calculateNextRecurring(SuccessDate startDate, SuccessDate todayDateTemp) {
-        LocalDate tempDate = startDate.toJavaDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        while (Date.from(tempDate.atStartOfDay(ZoneId.systemDefault()).toInstant()).compareTo(todayDateTemp.toJavaDate()) <= 0) {
-            tempDate = tempDate.plusYears(1);
+        SuccessDate tempDate = startDate;
+        while (tempDate.toJavaDate().compareTo(todayDateTemp.toJavaDate()) <= 0) {
+            tempDate = nextRecurring(startDate, tempDate);
         }
-        return Date.from(tempDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        return tempDate.toJavaDate();
     }
 
     public static String getStaticDescription(SuccessDate startDate) {
