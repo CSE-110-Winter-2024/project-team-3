@@ -104,9 +104,11 @@ public class RecurringTest {
         assertEquals(dataSource.getGoals().size(), 1);
         assertEquals(test4.ifDateMatchesRecurring(new SuccessDate(2024, 4, 7)), false);
         assertEquals(test4.ifDateMatchesRecurring(new SuccessDate(2024, 4, 26)), false);
-        assertEquals(test4.ifDateMatchesRecurring(new SuccessDate(2024, 5, 15)), true);
+        assertEquals(test4.ifDateMatchesRecurring(new SuccessDate(2024, 5, 15)), false);
+        assertEquals(test4.ifDateMatchesRecurring(new SuccessDate(2024, 5, 19)), true);
         assertEquals(test4.ifDateMatchesRecurring(new SuccessDate(2023, 5, 15)), false);
 
+        // rollover
         assertEquals(test4.ifDateMatchesRecurring(new SuccessDate(2024, 5, 16)), true);
 
         assertEquals(test4.getAssignDate(), Date.from(Instant.parse("2024-04-15T15:23:01Z")));
