@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/today"
+        android:tag="TODAY"
+        android:title="Today" />
+    <item
+        android:id="@+id/tomorrow"
+        android:tag="TOMORROW"
+        android:title="Tomorrow" />
+    <item
+        android:id="@+id/pending"
+        android:tag="PENDING"
+        android:title="Pending" />
+    <item
+        android:id="@+id/recurring"
+        android:tag="RECURRING"
+        android:title="Recurring" />
+
+</menu>

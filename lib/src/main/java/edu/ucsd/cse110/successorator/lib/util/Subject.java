@@ -13,6 +13,14 @@ public interface Subject<T> {
 
 
     /**
+     * Sets the current value of the subject. May be null.
+     *
+     * @return The current (possibly null) value of the subject.
+     */
+//    void setValue(T value);
+
+
+    /**
      * Adds an observer to the subject. The observer will be notified immediately of the subject's
      * current value (will be null if the subject has no value yet).
      *

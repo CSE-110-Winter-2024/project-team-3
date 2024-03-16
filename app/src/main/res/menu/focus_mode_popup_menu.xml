@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home"
+        android:tag="HOME"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/work"
+        android:tag="WORK"
+        android:title="Work" />
+
+    <item
+        android:id="@+id/errands"
+        android:tag="ERRANDS"
+        android:title="Errands" />
+
+    <item
+        android:id="@+id/school"
+        android:tag="SCHOOL"
+        android:title="School" />
+
+    <item
+        android:id="@+id/cancel"
+        android:tag="ALL"
+        android:title="Cancel" />
+</menu>
